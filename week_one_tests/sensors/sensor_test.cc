@@ -10,5 +10,26 @@ stopwatch watch;
 
 /* Entry Point */
 int main () {
-     rlink.command(WRITE_PORT_5, 64+16+4+1);
+
+    /* Setup Link */
+    int   val;
+    if (!rlink.initialise (ROBOT_NUM)) {
+        cout << "Cannot initialise link" << endl;
+        rlink.print_errs("    ");
+        return -1;
+    }
+    
+    /* Command I2C */
+    int out = 0xAA;
+    /* 
+    while(true) {
+        rlink.command(WRITE_PORT_5, out);
+        if(out == 0xAA){
+            out = 0x55;
+        } else {
+            out = 0xAA;
+        }
+    }
+    */
+    rlink.command(WRITE_PORT_5, out);
 }
