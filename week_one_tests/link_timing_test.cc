@@ -4,7 +4,7 @@
 #include <stopwatch.h>
 using namespace std;
 
-#define ROBOT_NUM  9
+#define ROBOT_NUM  15
 robot_link rlink;                           
 stopwatch watch;
 
