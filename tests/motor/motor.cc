@@ -19,12 +19,14 @@ int main () {
         return -1;
     }
     
-    
-    rlink.command(MOTOR_1_GO, 50);
-    rlink.command(MOTOR_2_GO, 50);
-    rlink.command(MOTOR_3_GO, 50);
+    rlink.command (RAMP_TIME, 128);
 
-    delay(5000);
+    rlink.command(MOTOR_1_GO, 100);
+    rlink.command(MOTOR_2_GO, 100);
+    rlink.command(MOTOR_3_GO, 100);
+    rlink.command(MOTOR_4_GO, 100);
+
+    delay(8000);
     
     return 0;
 }

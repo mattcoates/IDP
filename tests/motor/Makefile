@@ -1,3 +1,3 @@
 # Automatically generated Makefile
 motor : motor.cc 
-	 g++ -ansi -Wall -g -I ../../artifacts/1BRobot -L ../../artifacts/1BRobot motor.cc -o motor_test -lrobot
+	 g++ -ansi -Wall -g -I/export/teach/1BRobot -L/export/teach/1BRobot motor.cc -o motor -lrobot
