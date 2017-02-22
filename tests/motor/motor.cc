@@ -23,8 +23,6 @@ int main () {
 
     rlink.command(MOTOR_1_GO, 100);
     rlink.command(MOTOR_2_GO, 100);
-    rlink.command(MOTOR_3_GO, 100);
-    rlink.command(MOTOR_4_GO, 100);
 
     delay(8000);
     
