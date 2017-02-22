@@ -21,10 +21,20 @@ int main () {
     
     rlink.command (RAMP_TIME, 128);
 
-    rlink.command(MOTOR_1_GO, 100);
-    rlink.command(MOTOR_2_GO, 100);
+    rlink.command(MOTOR_1_GO, 127);
+    rlink.command(MOTOR_2_GO, 255);
 
-    delay(8000);
+    delay(2000);
+    
+    rlink.command(MOTOR_1_GO, 255);
+    rlink.command(MOTOR_2_GO, 127);
+
+    delay(2000);
+    
+    rlink.command(MOTOR_1_GO, 255);
+    rlink.command(MOTOR_2_GO, 255);
+
+    delay(2000);
     
     return 0;
 }
