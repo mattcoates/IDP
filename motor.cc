@@ -8,6 +8,11 @@
 #include "motor.h"
 using namespace std;
 
+void motor_init(void){
+    
+    rlink.command(RAMP_TIME, RAMP_RATE);
+}
+
 void right_motor(int speed, int direction){ 
 
     int output = (~(direction << 7) | (0x7F & speed));

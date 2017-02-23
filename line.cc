@@ -13,5 +13,4 @@ void next_junction(void) {
 
     right_motor(127, FORWARD);
     left_motor(127, FORWARD);
-    
 }
