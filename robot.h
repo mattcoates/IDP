@@ -27,14 +27,14 @@
 class robot {
     public:
         /* Navigation */
-        uint8_t heading;
-        uint8_t location;
+        int heading;
+        int location;
         
         /* Line Following */
         bool line[4];
         
         /* Payload Handling */     
-        uint8_t pallet_colour;
+        int pallet_colour;
 };
 
 #endif

@@ -7,5 +7,10 @@
 #include "line.h"
 using namespace std;
 
-/* Function Prototypes */
-void next_junction(void);
+
+void next_junction(void) {
+
+    
+
+
+}

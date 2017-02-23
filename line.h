@@ -3,6 +3,6 @@
 
 /* Function Prototypes */
 void next_junction(void);
-void change_heading(uint8_t old_heading, uint8_t new_heading); 
+void change_heading(int old_heading, int new_heading); 
 
 #endif

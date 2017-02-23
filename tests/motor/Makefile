@@ -1,3 +1,17 @@
-# Automatically generated Makefile
-motor : motor.cc 
-	 g++ -ansi -Wall -g -I ../../artifacts/1BRobot -L ../../artifacts/1BRobot motor.cc -o motor_test -lrobot
+CC=g++
+CFLAGS=-Wall -ansi -g -I ../../artifacts/1BRobot -c
+LDFLAGS=-L ../../artifacts/1BRobot
+SOURCES=motor.cc
+OBJECTS=$(SOURCES:.cc=.o)
+EXECUTABLE=motor_test
+
+all: $(SOURCES) $(EXECUTABLE)
+	
+$(EXECUTABLE): $(OBJECTS)
+	$(CC) $(LDFLAGS) $(OBJECTS) -o $@ -lrobot
+
+.cc.o:
+	$(CC) $(CFLAGS) $< -o $@
+	
+clean :
+	--quiet -rm $(OBJECTS)
