@@ -1,6 +1,9 @@
 #ifndef ROBOT_H
 #define ROBOT_H
 
+/* Robot Number */
+#define ROBOT_NUM  15
+
 /* Heading Macros */
 #define NORTH   1
 #define EAST    2
@@ -20,10 +23,6 @@
 #define RED     3
 #define BLACK   4
  
-/* Function Prototypes */
-void next_junction(void);
-void change_heading(uint8_t old_heading, uint8_t new_heading); 
-
 /* Global Robot Class */
 class robot {
     public:
@@ -32,7 +31,7 @@ class robot {
         uint8_t location;
         
         /* Line Following */
-        bool line_det[4];
+        bool line[4];
         
         /* Payload Handling */     
         uint8_t pallet_colour;
