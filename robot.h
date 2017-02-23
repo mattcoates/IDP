@@ -22,9 +22,9 @@
 #define WHITE   2
 #define RED     3
 #define BLACK   4
- 
+
 /* Global Robot Class */
-class robot {
+class robot_data {
     public:
         /* Navigation */
         int heading;
@@ -34,7 +34,14 @@ class robot {
         bool line[4];
         
         /* Payload Handling */     
-        int pallet_colour;
+        int current_pallet_colour;
 };
+
+/* Global Robot Link */
+extern robot_link rlink;
+
+/* Global Robot Data */
+extern robot_data robot;
+
 
 #endif

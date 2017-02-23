@@ -20,9 +20,9 @@ int main () {
     }
     
     rlink.command (RAMP_TIME, 64);
-
-    rlink.command(MOTOR_1_GO, 127);
-    rlink.command(MOTOR_2_GO, 255);
+    /* Forward Speeds */
+    rlink.command(MOTOR_1_GO, 255);
+    rlink.command(MOTOR_2_GO, 127);
 
     delay(8000);
     
