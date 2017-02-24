@@ -8,8 +8,9 @@
 #define RAMP_RATE   64
 
 /* Function Prototypes */
+void init_motor(void);
 void left_motor(int speed, int direction);
 void right_motor(int speed, int direction);
-void init_motor(void);
+void stop(void);
 
 #endif

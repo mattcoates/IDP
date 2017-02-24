@@ -33,6 +33,9 @@ class robot_data {
         /* Line Following */
         bool line[4];
         
+        /* Limit Switches */
+        bool limit2[2];
+        
         /* Payload Handling */     
         int current_pallet_colour;
 };

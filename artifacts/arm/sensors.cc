@@ -9,12 +9,3 @@
 #include "sensors.h"
 using namespace std;
 
-/* Front Sensors:
- * robot.line[0]  robot.line[1]  robot.line[2]  
- * Junction Sensor:
- * robot.line[3]
- */
-
-void next_junction(void) {
-
-}

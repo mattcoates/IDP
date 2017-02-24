@@ -6,11 +6,13 @@
 #include "robot.h"
 #include "line.h"
 #include "motor.h"
+#include "sensors.h"
 using namespace std;
 
 /* Robot Classes */
 robot_link rlink;
 robot_data robot;
+
 
 int main() {
 
@@ -20,4 +22,8 @@ int main() {
         rlink.print_errs("    ");
         return -1;
     }    
+    
+    right_motor(127, REVERSE);
+    left_motor(127, REVERSE);
+    delay(2000);
 }
