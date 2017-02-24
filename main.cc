@@ -3,27 +3,50 @@
 #include <robot_link.h>
 #include <stopwatch.h>
 #include <robot_delay.h>
+
 #include "robot.h"
 #include "line.h"
 #include "motor.h"
 #include "sensors.h"
+#include "navigation.h"
+
 using namespace std;
 
 /* Robot Classes */
 robot_link rlink;
 robot_data robot;
 
+bool robot_init(void);
 
 int main() {
 
-    /* Setup Link */                      
+    if (robot_init()) {
+        cout << "Robot Initialised" << endl;
+    }
+   
+    
+}
+
+
+
+bool robot_init(void) {
+
+    /* Link Innit */                      
     if (!rlink.initialise(ROBOT_NUM)) {
         cout << "Cannot initialise link" << endl;
         rlink.print_errs("    ");
-        return -1;
-    }    
+        return false;
+    } 
     
-    right_motor(127, REVERSE);
-    left_motor(127, REVERSE);
-    delay(2000);
+    /* Motor Init */
+    motor_init();
+
+    /* Navigation Init */
+    robot.location = START_BOX;
+    robot.heading = EAST;
+    
+    /* TODO: Pallet Init */
+    robot.carrying_pallet = false;
+    
+    return true;
 }

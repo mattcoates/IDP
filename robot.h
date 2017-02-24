@@ -4,25 +4,6 @@
 /* Robot Number */
 #define ROBOT_NUM  15
 
-/* Heading Macros */
-#define NORTH   1
-#define EAST    2
-#define SOUTH   3   
-#define WEST    4
-
-/* Location Macros */
-#define P1      1
-#define P2      2
-#define D1      13
-#define D2      15
-#define D3      10
-
-/* Colour Macros */
-#define GREEN   1
-#define WHITE   2
-#define RED     3
-#define BLACK   4
-
 /* Global Robot Class */
 class robot_data {
     public:
@@ -30,14 +11,16 @@ class robot_data {
         int heading;
         int location;
         
-        /* Line Following */
-        bool line[4];
+        /* IR Sensors */
+        int line;
         
         /* Limit Switches */
-        bool limit2[2];
+        int limit;
         
-        /* Payload Handling */     
+        /* Payload Handling */
+        bool carrying_pallet;     
         int current_pallet_colour;
+	    int forklift_position;
 };
 
 /* Global Robot Link */
@@ -45,6 +28,5 @@ extern robot_link rlink;
 
 /* Global Robot Data */
 extern robot_data robot;
-
 
 #endif
