@@ -208,7 +208,7 @@ void next_junction(void) {
 	}
 	
     /* Read Line Sensors */
-        read_line_sensors();
+    read_line_sensors();
 
 	/* Position axel over Junction Centre */
     while((robot.line & 0x08) == 0) {
@@ -226,8 +226,8 @@ void turn_90_anti_clockwise(void) {
     /* Start Stopwatch */
     turning_watch.start();
 
-    /* Turn until Junction Sensor goes White w/ 1 Second Grace Period */
-    while((turning_watch.read() < 1000)||((robot.line & 0x08) == 0)) {
+    /* Turn until Junction Sensor goes White w/ 1.5 Second Grace Period */
+    while((turning_watch.read() < 1500)||((robot.line & 0x08) == 0)) {
         read_line_sensors();
         left_motor(turn_power, REVERSE);
         right_motor(turn_power, FORWARD);
