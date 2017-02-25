@@ -39,7 +39,7 @@ state_t run_state(state_t cur_state) {
 
 /** STATE FUNCTIONS **/
 
-/* 1. State Init */
+/* 0. State Init */
 static state_t do_state_init() {
 
     /* Link Init */                      
@@ -64,7 +64,7 @@ static state_t do_state_init() {
 
 
 
-/* 2. State Two */
+/* 1. State Two */
 static state_t do_state_two() {
     
     return STATE_THREE;
@@ -72,7 +72,7 @@ static state_t do_state_two() {
 
 
 
-/* 3. State Three */
+/* 2. State Three */
 static state_t do_state_three() {
 
     return STATE_THREE;
