@@ -20,6 +20,12 @@ using namespace std;
  * Line Sensor Inputs:
  * b0 = Front Right, b1 = Front Centre
  * b2 = Front Left, b3 = Junction Detect
+ *
+ * Limit Switches Address:
+ * A0 = 0, A1 = 1, A2 = 0 -> PORT 0x02
+ *
+ * Limit Switch Inputs:
+ * b0 = Front Right, b1 = Front Left
  */
  
 
@@ -30,5 +36,5 @@ void read_line_sensors(void) {
 
 void read_limit_switches(void) {
 
-    /* TODO: Read Limit Switches */
+    robot.limit = rlink.request (READ_PORT_2);
 }

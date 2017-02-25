@@ -10,7 +10,7 @@
 /* Function Prototypes */
 void next_junction(void);
 void next_limit(void);
-void back_up(void);
+void back_up_from_limit(void);
 void change_heading(int old_heading, int new_heading); 
 
 #endif

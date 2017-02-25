@@ -24,24 +24,122 @@ const int creep_power = 20;
 const int turn_power = 50;
 
 void next_limit(void) {
-    
-    /* 
-     * TODO: Drive forwards following the line 
-     *       until both limit switches trigger
-     */
+     
+     /* Object Detection Flag */
+	bool object_detected = false;
+	
+	/* Loop until Junction Detected */
+	while(!(object_detected)) { 
 
+        /* Read Line Sensors */
+        read_line_sensors();
+        
+        switch((robot.line & 0x07)) {
+            
+            /* 0 0 0 - Where's the line? */
+            case 0:
+                cout << "No line detected" << endl;
+                stop(); 
+                break;
+            
+            /* 0 0 1 - Moving Serverly Left */
+            case 1:
+                left_motor((base_power + (2*delta_p)), FORWARD);
+                right_motor((base_power - (2*delta_p)), FORWARD); 
+                break;
+        
+            /* 0 1 0 - Following the Line */
+            case 2:
+                left_motor(base_power, FORWARD);
+                right_motor(base_power, FORWARD); 
+                break;
+                
+            /* 0 1 1 - Moving Slightly Left */
+            case 3:
+                left_motor((base_power + delta_p), FORWARD);
+                right_motor((base_power - delta_p), FORWARD); 
+                break;
+                
+            /* 1 0 0 - Moving Serverly Right */
+            case 4:
+                left_motor((base_power - (2*delta_p)), FORWARD);
+                right_motor((base_power + (2*delta_p)), FORWARD); 
+                break;
+   
+            /* 1 0 1 - What the actual */
+            case 5:
+                cout << "I am a confused robot" << endl;
+                stop(); 
+                break;
+
+            /* 1 1 0 - Moving Slightly Right */
+            case 6:
+                left_motor((base_power - delta_p), FORWARD);
+                right_motor((base_power + delta_p), FORWARD); 
+                break;
+                
+            /* 1 1 1 - Somthing has gone wrong */
+            case 7:
+                cout << "Junction detected?" << endl;
+                stop();
+                break;         
+	    }
+	    
+	    /* Read Limit Switches */
+	    read_limit_switches();
+	    
+	    /* Mask & Test for Collision */
+	    if (((robot.limit & 0x01) == 0x01) || ((robot.limit & 0x02) == 0x02)) {
+	        object_detected = true;
+	        /* TODO: Update to ensure it is square using both limit switches */
+	    }    
+	}
+	
+	stop();
 }
-void back_up(void) {
 
-    /* 
-     * Use after "next_limit" to get back to track 
-     *
-     * TODO: Reverse at equal power until the  
-     *       junction LED triggers white, then
-     *       continue moving back until it
-     *       goes black again.
-     */
 
+void back_up_from_limit(void) {
+
+    /* Junction Detection Flag */
+    bool near_junction_detected = false;
+    bool far_junction_detected = false;
+    
+    /* Reverse at Equal Power until Near Side of Junction Detected */
+    while(!(near_junction_detected)) {
+    
+        /* Read Line Sensors */
+        read_line_sensors();
+        
+        /* Reverse */
+        left_motor(creep_power, REVERSE);
+        right_motor(creep_power, REVERSE); 
+        
+        /* Detect White */
+        if((robot.line & 0x08) == 0x08) {
+        
+            near_junction_detected = true;
+        }
+    }
+    
+    /* Reverse until other side of line to position axel */
+    while(!(far_junction_detected)) {
+        
+        /* Read Line Sensors */
+        read_line_sensors();
+        
+        /* Reverse */
+        left_motor(creep_power, REVERSE);
+        right_motor(creep_power, REVERSE); 
+        
+        /* Detect Black */
+        if((robot.line & 0x08) == 0) {
+        
+            far_junction_detected = true;
+        }
+    }
+    
+    stop();
 }
 
 
@@ -116,7 +214,9 @@ void next_junction(void) {
 	    left_motor(creep_power, FORWARD);
         right_motor(creep_power, FORWARD); 
         read_line_sensors();
-	}	
+	}
+	
+	stop();
 }
 
 
@@ -131,13 +231,17 @@ void turn_90_anti_clockwise(void) {
         left_motor(turn_power, REVERSE);
         right_motor(turn_power, FORWARD);
     }
-
+    
+    stop();
     turning_watch.stop();
 }
 
 
 void change_heading(int old_heading, int new_heading) {
 
+    /* Update Heading */
+    robot.heading = new_heading;
+   
     /* NORTH */
     if(old_heading == NORTH) {
         if(new_heading == EAST) {
@@ -145,12 +249,15 @@ void change_heading(int old_heading, int new_heading) {
             turn_90_anti_clockwise();
             turn_90_anti_clockwise();
         }
-        if(new_heading == SOUTH) {
+        else if(new_heading == SOUTH) {
             turn_90_anti_clockwise();
             turn_90_anti_clockwise();
                 }
-        if(new_heading == WEST) {
+        else if(new_heading == WEST) {
             turn_90_anti_clockwise();
+        }
+        else {
+            /* Do Nothing */
         }
     }
    
@@ -161,12 +268,15 @@ void change_heading(int old_heading, int new_heading) {
             turn_90_anti_clockwise();
             turn_90_anti_clockwise();
         }
-        if(new_heading == EAST) {
+        else if(new_heading == EAST) {
             turn_90_anti_clockwise();
             turn_90_anti_clockwise();
                 }
-        if(new_heading == SOUTH) {
+        else if(new_heading == SOUTH) {
             turn_90_anti_clockwise();
+        }
+        else {
+            /* Do Nothing */
         }
     }
 
@@ -177,12 +287,15 @@ void change_heading(int old_heading, int new_heading) {
             turn_90_anti_clockwise();
             turn_90_anti_clockwise();
         }
-        if(new_heading == NORTH) {
+        else if(new_heading == NORTH) {
             turn_90_anti_clockwise();
             turn_90_anti_clockwise();
                 }
-        if(new_heading == EAST) {
+        else if(new_heading == EAST) {
             turn_90_anti_clockwise();
+        }
+        else {
+            /* Do Nothing */
         }
     }
 
@@ -193,12 +306,15 @@ void change_heading(int old_heading, int new_heading) {
             turn_90_anti_clockwise();
             turn_90_anti_clockwise();
         }
-        if(new_heading == WEST) {
+        else if(new_heading == WEST) {
             turn_90_anti_clockwise();
             turn_90_anti_clockwise();
                 }
-        if(new_heading == NORTH) {
+        else if(new_heading == NORTH) {
             turn_90_anti_clockwise();
+        }
+        else {
+            /* Do Nothing */
         }
     }
 }

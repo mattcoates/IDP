@@ -23,6 +23,8 @@ int main() {
     if (robot_init()) {
         cout << "Robot Initialised" << endl;
     }
+    
+    /* TODO: Init State Machine */
    
     
 }
