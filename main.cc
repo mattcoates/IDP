@@ -9,6 +9,7 @@
 #include "motor.h"
 #include "sensors.h"
 #include "navigation.h"
+#include "mission.h"
 
 using namespace std;
 
@@ -20,12 +21,13 @@ bool robot_init(void);
 
 int main() {
 
+    /* Init Robot */
     if (robot_init()) {
         cout << "Robot Initialised" << endl;
     }
     
-    /* TODO: Init State Machine */
-   
+    /* Commence Mission */
+    mission_begin();
     
 }
 

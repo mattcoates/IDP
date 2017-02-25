@@ -9,6 +9,7 @@
 #include "motor.h"
 #include "sensors.h"
 #include "navigation.h"
+#include "mission.h"
 
 using namespace std;
 
