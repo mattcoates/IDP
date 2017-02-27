@@ -20,9 +20,98 @@ void turn_90_anti_clockwise(void);
 
 /* Output Powers */
 const int base_power = 60;
-const int delta_p = 8;
-const int creep_power = 20;
+const int delta_p = 10;
+const int creep_power_l = 22;
+const int creep_power_r = 25;
 const int turn_power = 50;
+
+void next_junction(void) {
+
+	/* Junction Detection Flag */
+	bool junction_detected = false;
+
+	/* Loop until Junction Detected */
+	while(!(junction_detected)) { 
+
+        /* Read Line Sensors */
+        read_line_sensors();
+        
+        /* DEBUG */
+        cout << "L = " << ((robot.line & 0x04) >> 2) << " C = " << ((robot.line & 0x02) >> 1) << " R = " << (robot.line & 0x01) << "    J = " << ((robot.line & 0x08) >> 3);
+        
+        switch((robot.line & 0x07)) {
+            
+            /* 0 0 0 - Where's the line? */
+            case 0:
+                cout << "No line detected" << endl;
+                stop(); 
+                break;
+            
+            /* 0 0 1 - Moving Serverly Left */
+            case 1:
+                left_motor((base_power + (2*delta_p)), FORWARD);
+                right_motor((base_power - (2*delta_p)), FORWARD);
+                cout << "Serverely Left" << endl;
+                break;
+        
+            /* 0 1 0 - Following the Line */
+            case 2:
+                left_motor(base_power, FORWARD);
+                right_motor(base_power, FORWARD);
+                cout << "All Good" << endl; 
+                break;
+                
+            /* 0 1 1 - Moving Slightly Left */
+            case 3:
+                left_motor((base_power + delta_p), FORWARD);
+                right_motor((base_power - delta_p), FORWARD);
+                cout << "Slightly Left" << endl;  
+                break;
+                
+            /* 1 0 0 - Moving Serverly Right */
+            case 4:
+                left_motor((base_power - (2*delta_p)), FORWARD);
+                right_motor((base_power + (2*delta_p)), FORWARD); 
+                cout << "Serverely Right" << endl; 
+                break;
+   
+            /* 1 0 1 - What the actual */
+            case 5:
+                cout << "I am a confused robot" << endl;
+                stop(); 
+                break;
+
+            /* 1 1 0 - Moving Slightly Right */
+            case 6:
+                left_motor((base_power - delta_p), FORWARD);
+                right_motor((base_power + delta_p), FORWARD); 
+                cout << "Slightly Right" << endl; 
+                break;
+                
+            /* 1 1 1 - Junction Detected */
+            case 7:
+              stop();
+              junction_detected = true;
+              break;         
+	    }      
+	}
+	
+    /* Read Line Sensors */
+    read_line_sensors();
+    
+    /* DEBUG */
+    cout << "Creeping" << endl;
+
+	/* Position axel over Junction Centre */
+    while((robot.line & 0x08) == 0) {        
+	    left_motor(creep_power_l, FORWARD);
+        right_motor(creep_power_r, FORWARD); 
+        read_line_sensors();
+	}
+	
+	stop();
+}
+
 
 void next_limit(void) {
      
@@ -113,8 +202,8 @@ void back_up_from_limit(void) {
         read_line_sensors();
         
         /* Reverse */
-        left_motor(creep_power, REVERSE);
-        right_motor(creep_power, REVERSE); 
+        left_motor(creep_power_l, REVERSE);
+        right_motor(creep_power_r, REVERSE); 
         
         /* Detect White */
         if((robot.line & 0x08) == 0x08) {
@@ -130,8 +219,8 @@ void back_up_from_limit(void) {
         read_line_sensors();
         
         /* Reverse */
-        left_motor(creep_power, REVERSE);
-        right_motor(creep_power, REVERSE); 
+        left_motor(creep_power_l, REVERSE);
+        right_motor(creep_power_r, REVERSE); 
         
         /* Detect Black */
         if((robot.line & 0x08) == 0) {
@@ -141,83 +230,6 @@ void back_up_from_limit(void) {
     }
     
     stop();
-}
-
-
-void next_junction(void) {
-
-	/* Junction Detection Flag */
-	bool junction_detected = false;
-
-	/* Loop until Junction Detected */
-	while(!(junction_detected)) { 
-
-        /* Read Line Sensors */
-        read_line_sensors();
-        
-        switch((robot.line & 0x07)) {
-            
-            /* 0 0 0 - Where's the line? */
-            case 0:
-                cout << "No line detected" << endl;
-                stop(); 
-                break;
-            
-            /* 0 0 1 - Moving Serverly Left */
-            case 1:
-                left_motor((base_power + (2*delta_p)), FORWARD);
-                right_motor((base_power - (2*delta_p)), FORWARD); 
-                break;
-        
-            /* 0 1 0 - Following the Line */
-            case 2:
-                left_motor(base_power, FORWARD);
-                right_motor(base_power, FORWARD); 
-                break;
-                
-            /* 0 1 1 - Moving Slightly Left */
-            case 3:
-                left_motor((base_power + delta_p), FORWARD);
-                right_motor((base_power - delta_p), FORWARD); 
-                break;
-                
-            /* 1 0 0 - Moving Serverly Right */
-            case 4:
-                left_motor((base_power - (2*delta_p)), FORWARD);
-                right_motor((base_power + (2*delta_p)), FORWARD); 
-                break;
-   
-            /* 1 0 1 - What the actual */
-            case 5:
-                cout << "I am a confused robot" << endl;
-                stop(); 
-                break;
-
-            /* 1 1 0 - Moving Slightly Right */
-            case 6:
-                left_motor((base_power - delta_p), FORWARD);
-                right_motor((base_power + delta_p), FORWARD); 
-                break;
-                
-            /* 1 1 1 - Junction Detected */
-            case 7:
-                stop();
-                junction_detected = true;
-                break;         
-	    }      
-	}
-	
-    /* Read Line Sensors */
-    read_line_sensors();
-
-	/* Position axel over Junction Centre */
-    while((robot.line & 0x08) == 0) {
-	    left_motor(creep_power, FORWARD);
-        right_motor(creep_power, FORWARD); 
-        read_line_sensors();
-	}
-	
-	stop();
 }
 
 

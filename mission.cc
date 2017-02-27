@@ -66,7 +66,10 @@ static state_t do_state_init() {
 
 /* 1. State Two */
 static state_t do_state_two() {
-    
+    next_junction();
+    next_junction();
+    next_junction();
+    next_junction();
     return STATE_THREE;
 }
 
@@ -74,7 +77,7 @@ static state_t do_state_two() {
 
 /* 2. State Three */
 static state_t do_state_three() {
-
+    stop();
     return STATE_THREE;
 }
 

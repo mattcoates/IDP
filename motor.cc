@@ -22,15 +22,35 @@ void motor_init(void){
 
 void right_motor(int speed, int direction){ 
 
-    int output = (~(direction << 7) | (0x7F & speed));
+    int output = 0;
+    
+    if(direction) {
+        output = (0x7F & speed);
+    } else {
+        output = (0x7F & speed) + 128;    
+    }
+    
     rlink.command(MOTOR_2_GO, output);
+    
+    /* DEBUG */
+    cout << "  R =  " << speed << " (" << output << ")" << endl;
 }
 
 
 void left_motor(int speed, int direction){
 
-    int output = ((direction << 7) | (0x7F & speed));
-    rlink.command(MOTOR_1_GO, output);
+    int output = 0;
+    
+    if(direction) {
+        output = (0x7F & speed) + 128;
+    } else {
+        output = (0x7F & speed);    
+    }
+    
+    rlink.command(MOTOR_1_GO, output); 
+    
+    /* DEBUG */
+    cout << "  L =  " << speed << " (" << output << ")" ;
 }
 
 
