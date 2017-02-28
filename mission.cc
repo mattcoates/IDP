@@ -14,7 +14,7 @@
 using namespace std;
 
 typedef enum {
-    STATE_INIT = 0, STATE_TWO, STATE_THREE, NUM_STATES
+    STATE_INIT = 0, STATE_TEST, STATE_END, NUM_STATES
 } state_t;
 
 typedef state_t state_func_t(void);
@@ -22,12 +22,12 @@ typedef state_t state_func_t(void);
 /* Function Prototypes */
 state_t run_state(state_t cur_state);
 static state_t do_state_init(void);
-static state_t do_state_two(void);
-static state_t do_state_three(void);
+static state_t do_state_test(void);
+static state_t do_state_end(void);
 
 /* State Function Look Up Table */
 state_func_t* const state_table[NUM_STATES] = {
-    do_state_init, do_state_two, do_state_three
+    do_state_init, do_state_test, do_state_end
 };
 
 /* Run State Function */
@@ -59,26 +59,26 @@ static state_t do_state_init() {
     /* Pallet Init */
     robot.carrying_pallet = false;
 
-    return STATE_TWO;
+    return STATE_TEST;
 }
 
 
 
 /* 1. State Two */
-static state_t do_state_two() {
+static state_t do_state_test() {
     next_junction();
     next_junction();
     next_junction();
     next_junction();
-    return STATE_THREE;
+    return STATE_END;
 }
 
 
 
 /* 2. State Three */
-static state_t do_state_three() {
+static state_t do_state_end() {
     stop();
-    return STATE_THREE;
+    return STATE_END;
 }
 
 /** END STATE FUNCTIONS **/

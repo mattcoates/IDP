@@ -54,6 +54,22 @@ void left_motor(int speed, int direction){
 }
 
 
+void lift(int direction) {
+
+    int output = 0;
+    
+    if(direction) {
+        output = LIFT_SPEED + 128;
+    } else {
+        output = LIFT_SPEED;    
+    }
+    
+    rlink.command(MOTOR_3_GO, output); 
+
+
+}
+
+
 void stop(void){
     rlink.command(BOTH_MOTORS_GO_SAME, 0);
 }
