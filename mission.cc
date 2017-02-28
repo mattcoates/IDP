@@ -66,10 +66,21 @@ static state_t do_state_init() {
 
 /* 1. State Two */
 static state_t do_state_test() {
-    next_junction();
-    next_junction();
-    change_heading(EAST, NORTH);
-    next_junction();
+    
+    /* TEST 1 */
+    //next_junction();
+    //next_junction();
+    //change_heading(EAST, NORTH);
+    //next_junction();
+    
+    /* TEST 2 */
+    //next_junction();
+    //next_junction();
+    //change_heading(EAST, SOUTH);
+    
+    /* TEST 3 */
+    back_up_from_limit();
+    
     return STATE_END;
 }
 

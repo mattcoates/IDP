@@ -269,6 +269,9 @@ void back_up_from_limit(void) {
         /* Read Line Sensors */
         read_line_sensors();
         
+        /* DEBUG */
+        cout << "L = " << ((robot.line & 0x04) >> 2) << " C = " << ((robot.line & 0x02) >> 1) << " R = " << (robot.line & 0x01) << "    J = " << ((robot.line & 0x08) >> 3);
+        
         /* Reverse */
         switch((robot.line & 0x07)) {
             
@@ -342,6 +345,9 @@ void back_up_from_limit(void) {
         
         /* Reverse */
         switch((robot.line & 0x07)) {
+        
+        /* DEBUG */
+        cout << "L = " << ((robot.line & 0x04) >> 2) << " C = " << ((robot.line & 0x02) >> 1) << " R = " << (robot.line & 0x01) << "    J = " << ((robot.line & 0x08) >> 3);
             
             /* 0 0 0 - Where's the line? */
             case 0:
