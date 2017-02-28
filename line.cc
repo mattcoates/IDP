@@ -44,7 +44,7 @@ const int down_t3 = 9000;
 const int down_t4 = 10500;
 
 /* Turning Timings */
-const int turning_grace = 1000;
+const int turning_grace = 4000;
 
 
 void next_junction(void) {
