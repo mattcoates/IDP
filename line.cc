@@ -253,7 +253,7 @@ void next_limit(void) {
 	    read_limit_switches();
 	    
 	    /* Mask & Test for Collision */
-	    if (((robot.limit & 0x01) == 0x01) || ((robot.limit & 0x02) == 0x02)) {
+	    if (((robot.limit & 0x10) == 0x10) || ((robot.limit & 0x20) == 0x20)) {
 	        object_detected = true;
 	        /* TODO: Update to ensure it is square using both limit switches */
 	    }    
