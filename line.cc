@@ -18,6 +18,7 @@ stopwatch ramp_watch;
 
 /* Prototypes */
 void turn_90_anti_clockwise(void);
+void turn_90_clockwise(void);
 
 /* Output Powers */
 const int base_power = 50;
@@ -417,7 +418,7 @@ void back_up_from_limit(void) {
 
 void turn_90_anti_clockwise(void) {
 
-    cout << "Begin Turn" << endl;
+    cout << "Begin Turn Anticlockwise" << endl;
 
     /* Start Stopwatch */
     turning_watch.start();
@@ -434,6 +435,25 @@ void turn_90_anti_clockwise(void) {
 }
 
 
+void turn_90_clockwise(void) {
+
+    cout << "Begin Turn Clockwise" << endl;
+
+    /* Start Stopwatch */
+    turning_watch.start();
+
+    /* Turn until Junction Sensor goes White w/ 1 Second Grace Period */
+    while((turning_watch.read() < turning_grace)||((robot.line & 0x04) == 0)) {
+        read_line_sensors();
+        left_motor(turn_power_l, FORWARD);
+        right_motor(turn_power_r, REVERSE);
+    }
+    
+    stop();
+    turning_watch.stop();
+}
+
+
 void change_heading(int old_heading, int new_heading) {
 
     /* Update Heading */
@@ -442,9 +462,7 @@ void change_heading(int old_heading, int new_heading) {
     /* NORTH */
     if(old_heading == NORTH) {
         if(new_heading == EAST) {
-            turn_90_anti_clockwise();
-            turn_90_anti_clockwise();
-            turn_90_anti_clockwise();
+            turn_90_clockwise();
         }
         else if(new_heading == SOUTH) {
             turn_90_anti_clockwise();
@@ -461,9 +479,7 @@ void change_heading(int old_heading, int new_heading) {
     /* WEST */
     if(old_heading == WEST) {
         if(new_heading == NORTH) {
-            turn_90_anti_clockwise();
-            turn_90_anti_clockwise();
-            turn_90_anti_clockwise();
+            turn_90_clockwise();
         }
         else if(new_heading == EAST) {
             turn_90_anti_clockwise();
@@ -480,9 +496,7 @@ void change_heading(int old_heading, int new_heading) {
     /* SOUTH */
     if(old_heading == SOUTH) {
         if(new_heading == WEST) {
-            turn_90_anti_clockwise();
-            turn_90_anti_clockwise();
-            turn_90_anti_clockwise();
+            turn_90_clockwise();
         }
         else if(new_heading == NORTH) {
             turn_90_anti_clockwise();
@@ -499,9 +513,7 @@ void change_heading(int old_heading, int new_heading) {
     /* EAST */
     if(old_heading == EAST) {
         if(new_heading == SOUTH) {
-            turn_90_anti_clockwise();
-            turn_90_anti_clockwise();
-            turn_90_anti_clockwise();
+            turn_90_clockwise();
         }
         else if(new_heading == WEST) {
             turn_90_anti_clockwise();
