@@ -68,7 +68,7 @@ static state_t do_state_init() {
 static state_t do_state_test() {
     next_junction();
     next_junction();
-    next_junction();
+    change_heading(EAST, NORTH);
     next_junction();
     return STATE_END;
 }

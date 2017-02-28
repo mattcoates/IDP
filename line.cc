@@ -20,13 +20,13 @@ stopwatch ramp_watch;
 void turn_90_anti_clockwise(void);
 
 /* Output Powers */
-const int base_power = 60;
-const int delta_p = 7;
+const int base_power = 50;
+const int delta_p = 8;
 
 const int base_power_creep = 25;
 const int delta_p_creep = 4;
 
-const int turn_power_l = 36;
+const int turn_power_l = 40;
 const int turn_power_r = 40;
 
 const int ramp_power_l = 22;
@@ -96,12 +96,6 @@ void next_junction(void) {
                 right_motor((base_power + (2*delta_p)), FORWARD); 
                 cout << "Serverely Right" << endl; 
                 break;
-   
-            /* 1 0 1 - What the actual */
-            case 5:
-                cout << "I am a confused robot" << endl;
-                stop(); 
-                break;
 
             /* 1 1 0 - Moving Slightly Right */
             case 6:
@@ -165,19 +159,19 @@ void next_junction(void) {
                 right_motor((base_power_creep + (2*delta_p_creep)), FORWARD); 
                 cout << "Serverely Right" << endl; 
                 break;
-   
-            /* 1 0 1 - What the actual */
-            case 5:
-                cout << "I am a confused robot" << endl;
-                stop(); 
-                break;
 
             /* 1 1 0 - Moving Slightly Right */
             case 6:
                 left_motor((base_power_creep - delta_p_creep), FORWARD);
                 right_motor((base_power_creep + delta_p_creep), FORWARD); 
                 cout << "Slightly Right" << endl; 
-                break;        
+                break;
+            /* 1 1 1 - Continue */
+            case 7:
+                cout << "Continuing" << endl;
+                left_motor(base_power_creep, FORWARD);
+                right_motor(base_power_creep, FORWARD);                 
+                break;         
 	    }      
     
         read_line_sensors();
@@ -323,6 +317,13 @@ void back_up_from_limit(void) {
                 left_motor((base_power_creep + delta_p_creep), REVERSE);
                 right_motor((base_power_creep - delta_p_creep), REVERSE); 
                 cout << "Slightly Left" << endl; 
+                break;
+            
+            /* 1 1 1 - Continue */
+            case 7:
+                cout << "Continuing" << endl;
+                left_motor(base_power_creep, REVERSE);
+                right_motor(base_power_creep, REVERSE);                 
                 break;        
 	    }      
         
@@ -387,6 +388,13 @@ void back_up_from_limit(void) {
                 left_motor((base_power_creep + delta_p_creep), REVERSE);
                 right_motor((base_power_creep - delta_p_creep), REVERSE); 
                 cout << "Slightly Left" << endl; 
+                break;
+            
+            /* 1 1 1 - Continue */
+            case 7:
+                cout << "Continuing" << endl;
+                left_motor(base_power_creep, REVERSE);
+                right_motor(base_power_creep, REVERSE);                 
                 break;        
 	    }
         
@@ -403,11 +411,13 @@ void back_up_from_limit(void) {
 
 void turn_90_anti_clockwise(void) {
 
+    cout << "Begin Turn" << endl;
+
     /* Start Stopwatch */
     turning_watch.start();
 
     /* Turn until Junction Sensor goes White w/ 1 Second Grace Period */
-    while((turning_watch.read() < turning_grace)||((robot.line & 0x08) == 0)) {
+    while((turning_watch.read() < turning_grace)||((robot.line & 0x01) == 0)) {
         read_line_sensors();
         left_motor(turn_power_l, REVERSE);
         right_motor(turn_power_r, FORWARD);
