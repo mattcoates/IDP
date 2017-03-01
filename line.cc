@@ -280,7 +280,7 @@ void back_up_from_limit(void) {
             /* 0 0 1 - Reversing Serverly */
             case 1:
                 
-                /* Junction Test */
+                /* Direction Test */
                 if(((robot.line) & 0x08) == 0x08) {               
                     left_motor((base_power + (2*delta_p)), REVERSE);
                     right_motor((base_power - (2*delta_p)), REVERSE);
@@ -303,7 +303,7 @@ void back_up_from_limit(void) {
             /* 0 1 1 - Reversing Slightly */
             case 3:
                 
-                /* Junction Test */
+                /* Direction Test */
                 if(((robot.line) & 0x08) == 0x08) {               
                     left_motor((base_power + delta_p), REVERSE);
                     right_motor((base_power - delta_p), REVERSE);
@@ -319,7 +319,7 @@ void back_up_from_limit(void) {
             /* 1 0 0 - Reversing Serverly */
             case 4:
                 
-                /* Junction Test */
+                /* Direction Test */
                 if(((robot.line) & 0x08) == 0x08) {               
                     left_motor((base_power + (2*delta_p)), REVERSE);
                     right_motor((base_power - (2*delta_p)), REVERSE);
@@ -341,7 +341,7 @@ void back_up_from_limit(void) {
             /* 1 1 0 - Reversing Slightly */
             case 6:
                
-               /* Junction Test */
+               /* Direction Test */
                 if(((robot.line) & 0x08) == 0x08) {               
                     left_motor((base_power + delta_p), REVERSE);
                     right_motor((base_power - delta_p), REVERSE);
@@ -439,7 +439,7 @@ void turn_90_anti_clockwise(void) {
     /* Start Stopwatch */
     turning_watch.start();
 
-    /* Turn until Junction Sensor goes White w/ 1 Second Grace Period */
+    /* Turn until Junction Sensor goes White w/ Grace Period */
     while((turning_watch.read() < turning_grace)||((robot.line & 0x01) == 0)) {
         read_line_sensors();
         left_motor(turn_power_l, REVERSE);
@@ -458,7 +458,7 @@ void turn_90_clockwise(void) {
     /* Start Stopwatch */
     turning_watch.start();
 
-    /* Turn until Junction Sensor goes White w/ 1 Second Grace Period */
+    /* Turn until Junction Sensor goes White w/ Grace Period */
     while((turning_watch.read() < turning_grace)||((robot.line & 0x04) == 0)) {
         read_line_sensors();
         left_motor(turn_power_l, FORWARD);
