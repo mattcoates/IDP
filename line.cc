@@ -271,7 +271,7 @@ void back_up_from_limit(void) {
         read_line_sensors();
         
         /* DEBUG */
-        cout << "L = " << ((robot.line & 0x04) >> 2) << " C = " << ((robot.line & 0x02) >> 1) << " R = " << (robot.line & 0x01) << "    J = " << ((robot.line & 0x08) >> 3);
+        cout << "L = " << ((robot.line & 0x01)) << " C = " << ((robot.line & 0x02) >> 1) << " R = " << ((robot.line & 0x04) >> 2) << "    J = " << ((robot.line & 0x08) >> 3);
         
         /* Reverse */
         switch((robot.line & 0x07)) {
@@ -284,29 +284,29 @@ void back_up_from_limit(void) {
             
             /* 0 0 1 - Reversing Serverly Right */
             case 1:
-                left_motor((base_power_creep - (2*delta_p_creep)), REVERSE);
-                right_motor((base_power_creep + (2*delta_p_creep)), REVERSE);
+                left_motor((base_power - (2*delta_p)), REVERSE);
+                right_motor((base_power + (2*delta_p)), REVERSE);
                 cout << "Serverely Right" << endl;
                 break;
         
             /* 0 1 0 - Following the Line */
             case 2:
-                left_motor(base_power_creep, REVERSE);
-                right_motor(base_power_creep, REVERSE);
+                left_motor(base_power, REVERSE);
+                right_motor(base_power, REVERSE);
                 cout << "All Good" << endl; 
                 break;
                 
             /* 0 1 1 - Reversing Slightly Right */
             case 3:
-                left_motor((base_power_creep - delta_p_creep), REVERSE);
-                right_motor((base_power_creep + delta_p_creep), REVERSE);
+                left_motor((base_power - delta_p), REVERSE);
+                right_motor((base_power + delta_p), REVERSE);
                 cout << "Slightly Right" << endl;  
                 break;
                 
             /* 1 0 0 - Reversing Serverly Left */
             case 4:
-                left_motor((base_power_creep + (2*delta_p_creep)), REVERSE);
-                right_motor((base_power_creep - (2*delta_p_creep)), REVERSE); 
+                left_motor((base_power + (2*delta_p)), REVERSE);
+                right_motor((base_power - (2*delta_p)), REVERSE); 
                 cout << "Serverely Left" << endl; 
                 break;
    
@@ -318,16 +318,16 @@ void back_up_from_limit(void) {
 
             /* 1 1 0 - Reversing Slightly Left */
             case 6:
-                left_motor((base_power_creep + delta_p_creep), REVERSE);
-                right_motor((base_power_creep - delta_p_creep), REVERSE); 
+                left_motor((base_power + delta_p), REVERSE);
+                right_motor((base_power - delta_p), REVERSE); 
                 cout << "Slightly Left" << endl; 
                 break;
             
             /* 1 1 1 - Continue */
             case 7:
                 cout << "Continuing" << endl;
-                left_motor(base_power_creep, REVERSE);
-                right_motor(base_power_creep, REVERSE);                 
+                left_motor(base_power, REVERSE);
+                right_motor(base_power, REVERSE);                 
                 break;        
 	    }      
         
@@ -344,11 +344,11 @@ void back_up_from_limit(void) {
         /* Read Line Sensors */
         read_line_sensors();
         
+        /* DEBUG */
+        cout << "L = " << ((robot.line & 0x01)) << " C = " << ((robot.line & 0x02) >> 1) << " R = " << ((robot.line & 0x04) >> 2) << "    J = " << ((robot.line & 0x08) >> 3);
+        
         /* Reverse */
         switch((robot.line & 0x07)) {
-        
-        /* DEBUG */
-        cout << "L = " << ((robot.line & 0x04) >> 2) << " C = " << ((robot.line & 0x02) >> 1) << " R = " << (robot.line & 0x01) << "    J = " << ((robot.line & 0x08) >> 3);
             
             /* 0 0 0 - Where's the line? */
             case 0:
@@ -358,29 +358,29 @@ void back_up_from_limit(void) {
             
             /* 0 0 1 - Reversing Serverly Right */
             case 1:
-                left_motor((base_power_creep - (2*delta_p_creep)), REVERSE);
-                right_motor((base_power_creep + (2*delta_p_creep)), REVERSE);
+                left_motor((base_power - (2*delta_p)), REVERSE);
+                right_motor((base_power + (2*delta_p)), REVERSE);
                 cout << "Serverely Right" << endl;
                 break;
         
             /* 0 1 0 - Following the Line */
             case 2:
-                left_motor(base_power_creep, REVERSE);
-                right_motor(base_power_creep, REVERSE);
+                left_motor(base_power, REVERSE);
+                right_motor(base_power, REVERSE);
                 cout << "All Good" << endl; 
                 break;
                 
             /* 0 1 1 - Reversing Slightly Right */
             case 3:
-                left_motor((base_power_creep - delta_p_creep), REVERSE);
-                right_motor((base_power_creep + delta_p_creep), REVERSE);
+                left_motor((base_power - delta_p), REVERSE);
+                right_motor((base_power + delta_p), REVERSE);
                 cout << "Slightly Right" << endl;  
                 break;
                 
             /* 1 0 0 - Reversing Serverly Left */
             case 4:
-                left_motor((base_power_creep + (2*delta_p_creep)), REVERSE);
-                right_motor((base_power_creep - (2*delta_p_creep)), REVERSE); 
+                left_motor((base_power + (2*delta_p)), REVERSE);
+                right_motor((base_power - (2*delta_p)), REVERSE); 
                 cout << "Serverely Left" << endl; 
                 break;
    
@@ -392,18 +392,18 @@ void back_up_from_limit(void) {
 
             /* 1 1 0 - Reversing Slightly Left */
             case 6:
-                left_motor((base_power_creep + delta_p_creep), REVERSE);
-                right_motor((base_power_creep - delta_p_creep), REVERSE); 
+                left_motor((base_power + delta_p), REVERSE);
+                right_motor((base_power - delta_p), REVERSE); 
                 cout << "Slightly Left" << endl; 
                 break;
             
             /* 1 1 1 - Continue */
             case 7:
                 cout << "Continuing" << endl;
-                left_motor(base_power_creep, REVERSE);
-                right_motor(base_power_creep, REVERSE);                 
+                left_motor(base_power, REVERSE);
+                right_motor(base_power, REVERSE);                 
                 break;        
-	    }
+	    }      
         
         /* Detect Black */
         if((robot.line & 0x08) == 0) {
@@ -411,6 +411,7 @@ void back_up_from_limit(void) {
             far_junction_detected = true;
         }
     }
+    
     
     stop();
 }
