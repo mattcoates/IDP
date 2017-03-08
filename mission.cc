@@ -69,6 +69,11 @@ static state_t do_state_test() {
     
  
     /* TEST 1 */
+    next_junction();
+    next_junction();
+    change_heading(EAST, SOUTH);
+    next_limit();
+    delay(1000);
     back_up_from_limit();
     change_heading(SOUTH, WEST);
     next_junction();

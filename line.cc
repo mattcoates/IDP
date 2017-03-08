@@ -22,12 +22,15 @@ void turn_90_clockwise(void);
 
 /* Output Powers */
 const int base_power = 50;
-const int delta_p = 8;
+const int delta_p = 10;
 
 const int base_power_creep = 25;
-const int delta_p_creep = 6;
+const int delta_p_creep = 9;
 
-const int turn_power_l = 40;
+const int reverse_power_l = 22;
+const int reverse_power_r = 25;
+
+const int turn_power_l = 36;
 const int turn_power_r = 40;
 
 const int ramp_power_l = 22;
@@ -246,7 +249,7 @@ void next_limit(void) {
 	    read_limit_switches();
 	    
 	    /* Mask & Test for Collision */
-	    if (((robot.limit & 0x10) == 0x10) || ((robot.limit & 0x20) == 0x20)) {
+	    if (((robot.limit & 0x40) == 0x00) || ((robot.limit & 0x20) == 0x00)) {
 	        object_detected = true;
 	        /* TODO: Update to ensure it is square using both limit switches */
 	    }    
@@ -269,97 +272,19 @@ void back_up_from_limit(void) {
         /* DEBUG */
         cout << "b0 = " << ((robot.line & 0x01)) << " b1 = " << ((robot.line & 0x02) >> 1) << " b2 = " << ((robot.line & 0x04) >> 2) << "    J = " << ((robot.line & 0x08) >> 3);
         
-        /* Reverse */
-        switch((robot.line & 0x07)) {
-            
-            /* 0 0 0 - Where's the line? */
-            case 0:
-                cout << "No line detected" << endl;
-                break;
-            
-            /* 0 0 1 - Reversing Serverly */
-            case 1:
-                
-                /* Direction Test */
-                if(((robot.line) & 0x08) == 0x08) {               
-                    left_motor((base_power + (2*delta_p)), REVERSE);
-                    right_motor((base_power - (2*delta_p)), REVERSE);
-                    cout << "Serverely Left" << endl;
-                } else {
-                    left_motor((base_power - (2*delta_p)), REVERSE);
-                    right_motor((base_power + (2*delta_p)), REVERSE);
-                    cout << "Serverely Right" << endl;
-                }
-                
-            break;
+        /* Reverse until Junction */
+        if((robot.line & 0x07) == 0x07) {
+                      
+            /* 1 1 1 - Detected */
+            cout << "Detected" << endl;
+            stop();   
+            junction_detected = true;  
+                     
+        } else {
         
-            /* 0 1 0 - Following the Line */
-            case 2:
-                left_motor(base_power, REVERSE);
-                right_motor(base_power, REVERSE);
-                cout << "All Good" << endl; 
-                break;
-                
-            /* 0 1 1 - Reversing Slightly */
-            case 3:
-                
-                /* Direction Test */
-                if(((robot.line) & 0x08) == 0x08) {               
-                    left_motor((base_power + delta_p), REVERSE);
-                    right_motor((base_power - delta_p), REVERSE);
-                    cout << "Slightly Left" << endl;
-                } else {
-                    left_motor((base_power - delta_p), REVERSE);
-                    right_motor((base_power + delta_p), REVERSE);
-                    cout << "Slightly Right" << endl;
-                }
-                
-                break;
-                
-            /* 1 0 0 - Reversing Serverly */
-            case 4:
-                
-                /* Direction Test */
-                if(((robot.line) & 0x08) == 0x08) {               
-                    left_motor((base_power + (2*delta_p)), REVERSE);
-                    right_motor((base_power - (2*delta_p)), REVERSE);
-                    cout << "Serverely Right" << endl;
-                } else {
-                    left_motor((base_power - (2*delta_p)), REVERSE);
-                    right_motor((base_power + (2*delta_p)), REVERSE);
-                    cout << "Serverely Left" << endl;
-                }
-                
-                break;
-   
-            /* 1 0 1 - What the actual */
-            case 5:
-                cout << "I am a confused robot" << endl;
-                stop(); 
-                break;
-
-            /* 1 1 0 - Reversing Slightly */
-            case 6:
-               
-               /* Direction Test */
-                if(((robot.line) & 0x08) == 0x08) {               
-                    left_motor((base_power + delta_p), REVERSE);
-                    right_motor((base_power - delta_p), REVERSE);
-                    cout << "Serverely Right" << endl;
-                } else {
-                    left_motor((base_power - delta_p), REVERSE);
-                    right_motor((base_power + delta_p), REVERSE);
-                    cout << "Serverely Left" << endl;
-                }
-               
-                break;
-            
-            /* 1 1 1 - Continue */
-            case 7:
-                cout << "Continuing" << endl;
-                stop();   
-                junction_detected = true;           
-                break;        
+            /* Reverse */
+            left_motor(reverse_power_l, REVERSE);
+            right_motor(reverse_power_r, REVERSE);             
 	    }           
     }
     
@@ -440,7 +365,7 @@ void turn_90_anti_clockwise(void) {
     turning_watch.start();
 
     /* Turn until Junction Sensor goes White w/ Grace Period */
-    while((turning_watch.read() < turning_grace)||((robot.line & 0x01) == 0)) {
+    while((turning_watch.read() < turning_grace)||((robot.line & 0x04) == 0)) {
         read_line_sensors();
         left_motor(turn_power_l, REVERSE);
         right_motor(turn_power_r, FORWARD);
@@ -459,7 +384,7 @@ void turn_90_clockwise(void) {
     turning_watch.start();
 
     /* Turn until Junction Sensor goes White w/ Grace Period */
-    while((turning_watch.read() < turning_grace)||((robot.line & 0x04) == 0)) {
+    while((turning_watch.read() < turning_grace)||((robot.line & 0x01) == 0)) {
         read_line_sensors();
         left_motor(turn_power_l, FORWARD);
         right_motor(turn_power_r, REVERSE);

@@ -26,7 +26,7 @@ using namespace std;
  * A0 = 0, A1 = 1, A2 = 0 -> PORT 0x02
  *
  * Limit Switch Inputs:
- * b4 = Front Right, b5 = Front Left
+ * b6 = Front Right, b5 = Front Left
  */
  
 
