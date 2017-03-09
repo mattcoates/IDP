@@ -22,7 +22,10 @@ void turn_90_clockwise(void);
 
 /* Output Powers */
 const int base_power = 50;
-const int delta_p = 10;
+const int delta_p = 8;
+
+const int ramp_base_power = 80;
+const int ramp_delta_p = 15;
 
 const int base_power_creep = 25;
 const int delta_p_creep = 9;
@@ -33,14 +36,14 @@ const int reverse_power_r = 25;
 const int turn_power_l = 36;
 const int turn_power_r = 40;
 
-const int ramp_power_l = 22;
-const int ramp_power_r = 25;
+const int ramp_power_l = 80;
+const int ramp_power_r = 85;
 
 /* Ramp Timings */
-const int up_t1 = 1000;
-const int up_t2 = 2000;
-const int up_t3 = 8000;
-const int up_t4 = 9500;
+const int up_t1 = 8000;
+const int up_t2 = 9000;
+const int up_t3 = 14500;
+const int up_t4 = 15500;
 
 const int down_t1 = 2000;
 const int down_t2 = 3000;
@@ -473,307 +476,63 @@ void change_heading(int old_heading, int new_heading) {
 void traverse_ramp(int direction) {
         
     ramp_watch.start();    
-    
-    /* RAMP ISSUES:
-     * Because the line sensors lift off the ground on exit and entry to
-     * the ramp we are unable to trust them from t1 to t2 and from t3 to t4. 
-     * In this period we will have to output an equal power to both wheels 
-     * and correct when the sensors can be trusted again.
-     */    
-        
+     
+    /* Going up the slide */
     if(direction == UPWARDS) {
     
-        /* Junction Detection Flag */
-	    bool junction_detected = false;
-
-	    /* Loop until Junction Detected */
-	    while(!(junction_detected)) { 
-          
-            /* Handle Sensor Trust Issues */
-            if(((ramp_watch.read() > up_t1) && (ramp_watch.read() < up_t2)) ||  ((ramp_watch.read() > up_t3) && (ramp_watch.read() < up_t4))) {
-            
-                /* Dont Trust Sensors */
-                left_motor(ramp_power_l, FORWARD);
-                right_motor(ramp_power_r, FORWARD);
-            
-            
-            } else {
-            
-                /* Read Line Sensors */
-                read_line_sensors();
-            
-                /* Follow Line */
-                switch((robot.line & 0x07)) {
-                    
-                    /* 0 0 0 - Where's the line? */
-                    case 0:
-                        cout << "No line detected" << endl;
-                        stop(); 
-                        break;
-                    
-                    /* 0 0 1 - Moving Serverly Left */
-                    case 1:
-                        left_motor((base_power + (2*delta_p)), FORWARD);
-                        right_motor((base_power - (2*delta_p)), FORWARD);
-                        cout << "Serverely Left" << endl;
-                        break;
-                
-                    /* 0 1 0 - Following the Line */
-                    case 2:
-                        left_motor(base_power, FORWARD);
-                        right_motor(base_power, FORWARD);
-                        cout << "All Good" << endl; 
-                        break;
-                        
-                    /* 0 1 1 - Moving Slightly Left */
-                    case 3:
-                        left_motor((base_power + delta_p), FORWARD);
-                        right_motor((base_power - delta_p), FORWARD);
-                        cout << "Slightly Left" << endl;  
-                        break;
-                        
-                    /* 1 0 0 - Moving Serverly Right */
-                    case 4:
-                        left_motor((base_power - (2*delta_p)), FORWARD);
-                        right_motor((base_power + (2*delta_p)), FORWARD); 
-                        cout << "Serverely Right" << endl; 
-                        break;
-           
-                    /* 1 0 1 - What the actual */
-                    case 5:
-                        cout << "I am a confused robot" << endl;
-                        stop(); 
-                        break;
-
-                    /* 1 1 0 - Moving Slightly Right */
-                    case 6:
-                        left_motor((base_power - delta_p), FORWARD);
-                        right_motor((base_power + delta_p), FORWARD); 
-                        cout << "Slightly Right" << endl; 
-                        break;
-                        
-                    /* 1 1 1 - Junction Detected */
-                    case 7:
-                      stop();
-                      junction_detected = true;
-                      break;         
-                }     
-            }     
-        }
-    
-        /* Read Line Sensors */
-        read_line_sensors();
+        cout << "Ramp Approach" << endl;
         
-        /* DEBUG */
-        cout << "Creeping to Junction" << endl;
-
-	    /* Position axel over Junction Centre */
-        while((robot.line & 0x08) == 0) {
-            
-            /* Follow Line */
+        /* Handle Trust Issues */            
+        while(ramp_watch.read() < up_t1) {
+                  
             switch((robot.line & 0x07)) {
-                
+            
                 /* 0 0 0 - Where's the line? */
                 case 0:
                     cout << "No line detected" << endl;
-                    stop(); 
                     break;
                 
                 /* 0 0 1 - Moving Serverly Left */
                 case 1:
-                    left_motor((base_power_creep + (2*delta_p_creep)), FORWARD);
-                    right_motor((base_power_creep - (2*delta_p_creep)), FORWARD);
+                    left_motor((base_power + (2*delta_p)), FORWARD);
+                    right_motor((base_power - (2*delta_p)), FORWARD);
                     cout << "Serverely Left" << endl;
                     break;
             
                 /* 0 1 0 - Following the Line */
                 case 2:
-                    left_motor(base_power_creep, FORWARD);
-                    right_motor(base_power_creep, FORWARD);
+                    left_motor(base_power, FORWARD);
+                    right_motor(base_power, FORWARD);
                     cout << "All Good" << endl; 
                     break;
                     
                 /* 0 1 1 - Moving Slightly Left */
                 case 3:
-                    left_motor((base_power_creep + delta_p_creep), FORWARD);
-                    right_motor((base_power_creep - delta_p_creep), FORWARD);
+                    left_motor((base_power + delta_p), FORWARD);
+                    right_motor((base_power - delta_p), FORWARD);
                     cout << "Slightly Left" << endl;  
                     break;
                     
                 /* 1 0 0 - Moving Serverly Right */
                 case 4:
-                    left_motor((base_power_creep - (2*delta_p_creep)), FORWARD);
-                    right_motor((base_power_creep + (2*delta_p_creep)), FORWARD); 
+                    left_motor((base_power - (2*delta_p)), FORWARD);
+                    right_motor((base_power + (2*delta_p)), FORWARD); 
                     cout << "Serverely Right" << endl; 
-                    break;
-       
-                /* 1 0 1 - What the actual */
-                case 5:
-                    cout << "I am a confused robot" << endl;
-                    stop(); 
                     break;
 
                 /* 1 1 0 - Moving Slightly Right */
                 case 6:
-                    left_motor((base_power_creep - delta_p_creep), FORWARD);
-                    right_motor((base_power_creep + delta_p_creep), FORWARD); 
+                    left_motor((base_power - delta_p), FORWARD);
+                    right_motor((base_power + delta_p), FORWARD); 
                     cout << "Slightly Right" << endl; 
-                    break;        
-	        }      
+                    break;
+                    
+                /* 1 1 1 - Junction Detected */
+                case 7:
+                  stop();
+                  break;         
+	        }
         
-            read_line_sensors();
-	    }
-	    
-	    stop();
-    }
-
-    
-    if(direction == DOWNWARDS) {
-    
-        /* Junction Detection Flag */
-	    bool junction_detected = false;
-
-	    /* Loop until Junction Detected */
-	    while(!(junction_detected)) { 
-          
-            /* Handle Sensor Trust Issues */
-            if(((ramp_watch.read() > down_t1) && (ramp_watch.read() < down_t2)) ||  ((ramp_watch.read() > down_t3) && (ramp_watch.read() < down_t4))) {
-            
-                /* Dont Trust Sensors */
-                left_motor(ramp_power_l, FORWARD);
-                right_motor(ramp_power_r, FORWARD);
-            
-            
-            } else {
-            
-                /* Read Line Sensors */
-                read_line_sensors();
-            
-                /* Follow Line */
-                switch((robot.line & 0x07)) {
-                    
-                    /* 0 0 0 - Where's the line? */
-                    case 0:
-                        cout << "No line detected" << endl;
-                        stop(); 
-                        break;
-                    
-                    /* 0 0 1 - Moving Serverly Left */
-                    case 1:
-                        left_motor((base_power + (2*delta_p)), FORWARD);
-                        right_motor((base_power - (2*delta_p)), FORWARD);
-                        cout << "Serverely Left" << endl;
-                        break;
-                
-                    /* 0 1 0 - Following the Line */
-                    case 2:
-                        left_motor(base_power, FORWARD);
-                        right_motor(base_power, FORWARD);
-                        cout << "All Good" << endl; 
-                        break;
-                        
-                    /* 0 1 1 - Moving Slightly Left */
-                    case 3:
-                        left_motor((base_power + delta_p), FORWARD);
-                        right_motor((base_power - delta_p), FORWARD);
-                        cout << "Slightly Left" << endl;  
-                        break;
-                        
-                    /* 1 0 0 - Moving Serverly Right */
-                    case 4:
-                        left_motor((base_power - (2*delta_p)), FORWARD);
-                        right_motor((base_power + (2*delta_p)), FORWARD); 
-                        cout << "Serverely Right" << endl; 
-                        break;
-           
-                    /* 1 0 1 - What the actual */
-                    case 5:
-                        cout << "I am a confused robot" << endl;
-                        stop(); 
-                        break;
-
-                    /* 1 1 0 - Moving Slightly Right */
-                    case 6:
-                        left_motor((base_power - delta_p), FORWARD);
-                        right_motor((base_power + delta_p), FORWARD); 
-                        cout << "Slightly Right" << endl; 
-                        break;
-                        
-                    /* 1 1 1 - Junction Detected */
-                    case 7:
-                      stop();
-                      junction_detected = true;
-                      break;         
-                }     
-            }     
         }
-    
-        /* Read Line Sensors */
-        read_line_sensors();
-        
-        /* DEBUG */
-        cout << "Creeping to Junction" << endl;
-
-	    /* Position axel over Junction Centre */
-        while((robot.line & 0x08) == 0) {
-            
-            /* Follow Line */
-            switch((robot.line & 0x07)) {
-                
-                /* 0 0 0 - Where's the line? */
-                case 0:
-                    cout << "No line detected" << endl;
-                    stop(); 
-                    break;
-                
-                /* 0 0 1 - Moving Serverly Left */
-                case 1:
-                    left_motor((base_power_creep + (2*delta_p_creep)), FORWARD);
-                    right_motor((base_power_creep - (2*delta_p_creep)), FORWARD);
-                    cout << "Serverely Left" << endl;
-                    break;
-            
-                /* 0 1 0 - Following the Line */
-                case 2:
-                    left_motor(base_power_creep, FORWARD);
-                    right_motor(base_power_creep, FORWARD);
-                    cout << "All Good" << endl; 
-                    break;
-                    
-                /* 0 1 1 - Moving Slightly Left */
-                case 3:
-                    left_motor((base_power_creep + delta_p_creep), FORWARD);
-                    right_motor((base_power_creep - delta_p_creep), FORWARD);
-                    cout << "Slightly Left" << endl;  
-                    break;
-                    
-                /* 1 0 0 - Moving Serverly Right */
-                case 4:
-                    left_motor((base_power_creep - (2*delta_p_creep)), FORWARD);
-                    right_motor((base_power_creep + (2*delta_p_creep)), FORWARD); 
-                    cout << "Serverely Right" << endl; 
-                    break;
-       
-                /* 1 0 1 - What the actual */
-                case 5:
-                    cout << "I am a confused robot" << endl;
-                    stop(); 
-                    break;
-
-                /* 1 1 0 - Moving Slightly Right */
-                case 6:
-                    left_motor((base_power_creep - delta_p_creep), FORWARD);
-                    right_motor((base_power_creep + delta_p_creep), FORWARD); 
-                    cout << "Slightly Right" << endl; 
-                    break;        
-	        }      
-        
-            read_line_sensors();
-	    }
-	    
-	    stop();
     }
-     
-     ramp_watch.stop();
 }
-
