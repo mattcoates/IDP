@@ -67,10 +67,46 @@ static state_t do_state_init() {
 /* 1. State Two */
 static state_t do_state_test() {
     
- 
-    /* TEST 1 */
-    next_junction();
-    traverse_ramp(UPWARDS);
+     cout << "Team Challanger - Testing Console v1.0" << endl;
+     cout << "[Press h for help]" << endl;
+    
+    while(true) {
+    
+        cout << endl << "Enter Command: " << endl;
+        
+        char a;        
+        cin >> a;
+        
+        switch(a) {
+        
+            case 'n':
+                next_junction();
+                break;
+            
+            case 't':
+                turn_90_clockwise();
+                break;
+            
+            case 's':
+                turn_90_anti_clockwise();
+                break;
+                
+            case 'l':
+                next_limit();
+                break;
+                
+            case 'r':
+                traverse_ramp(UPWARDS);
+                break;
+                
+            case 'h':
+                cout << "n = Next Junction" << endl;
+                cout << "t = Turn Clockwise" << endl;
+                cout << "s = Turn Anticlockwise" << endl;
+                cout << "l = Next Limit" << endl;
+                break;
+        }
+    }
     
     return STATE_END;
 }

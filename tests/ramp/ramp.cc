@@ -21,6 +21,9 @@ void traverse_ramp(int direction) {
         
         /* Handle Trust Issues */            
         while(ramp_watch.read() < up_t1) {
+        
+            /* Read Line Sensors */
+            read_line_sensors();
                   
             switch((robot.line & 0x07)) {
             
@@ -66,7 +69,7 @@ void traverse_ramp(int direction) {
                     
                 /* 1 1 1 - Junction Detected */
                 case 7:
-                  stop();
+                  cout << "Junction Detected?" << endl; 
                   break;         
 	        }
         
@@ -85,6 +88,9 @@ void traverse_ramp(int direction) {
         cout << "Ramp Comfortable" << endl;
         
         while(ramp_watch.read() < up_t3) {
+        
+            /* Read Line Sensors */
+            read_line_sensors();
         
             /* Follow line at power 80 */             
             switch((robot.line & 0x07)) {

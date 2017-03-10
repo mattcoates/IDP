@@ -18,5 +18,7 @@ void next_limit(void);
 void back_up_from_limit(void);
 void change_heading(int old_heading, int new_heading); 
 void traverse_ramp(int direction);
+void turn_90_anti_clockwise(void);
+void turn_90_clockwise(void);
 
 #endif
