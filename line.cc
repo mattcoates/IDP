@@ -37,10 +37,10 @@ const int turn_power_l = 36;
 const int turn_power_r = 40;
 
 /* Ramp Timings */
-const int up_t1 = 4500;
-const int up_t2 = 6500;
+const int up_t1 = 4000;
+const int up_t2 = 6800;
 const int up_t3 = 11500;
-const int up_t4 = 14500;
+const int up_t4 = 15000;
 
 const int down_t1 = 2000;
 const int down_t2 = 3000;
@@ -578,7 +578,6 @@ void traverse_ramp(int direction) {
                 /* 0 0 0 - Where's the line? */
                 case 0:
                     cout << "No line detected" << endl;
-                    stop(); 
                     break;
                 
                 /* 0 0 1 - Moving Serverly Left */
@@ -655,8 +654,7 @@ void traverse_ramp(int direction) {
                 
                 /* 0 0 0 - Where's the line? */
                 case 0:
-                    cout << "No line detected" << endl;
-                    stop(); 
+                    cout << "No line detected" << endl; 
                     break;
                 
                 /* 0 0 1 - Moving Serverly Left */

@@ -99,11 +99,49 @@ static state_t do_state_test() {
                 traverse_ramp(UPWARDS);
                 break;
                 
+            case 'f':
+                lift(UP);
+                delay(300);
+                lift(DOWN);
+                delay(3000);
+                stop();
+                break;
+            
+            case 'a':
+                next_junction();
+                next_junction();
+                turn_90_anti_clockwise();
+                next_junction();           
+                break;
+                
+            case 'b':
+                next_junction();
+                next_junction();
+                next_junction();     
+                turn_90_clockwise();
+                next_limit();                      
+                break;
+                
+            case 'c':
+                next_junction();
+                traverse_ramp(UPWARDS);
+                turn_90_clockwise();
+                next_junction();
+                next_junction();
+                next_junction();
+                next_junction();
+                next_limit();                   
+                break;            
+            
             case 'h':
+                cout << "a = Test 1 - Follow, Turn, Follow" << endl;
+                cout << "b = Test 2 - Follow, Align, Stop" << endl;
+                cout << "c = Test 3 - Follow, Ramp, Follow, Align, Stop" << endl << endl;
                 cout << "n = Next Junction" << endl;
                 cout << "t = Turn Clockwise" << endl;
                 cout << "s = Turn Anticlockwise" << endl;
                 cout << "l = Next Limit" << endl;
+                cout << "f = Forklift Upwards for 2.5s" << endl;
                 break;
         }
     }

@@ -72,5 +72,6 @@ void lift(int direction) {
 
 void stop(void){
     rlink.command(BOTH_MOTORS_GO_SAME, 0);
+    rlink.command(MOTOR_3_GO, 0);
 }
 
