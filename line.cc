@@ -15,7 +15,7 @@ using namespace std;
 
 stopwatch turning_watch;
 stopwatch ramp_watch;
-
+stopwatch reversing_watch;
 
 /* Output Powers */
 const int base_power = 65;
@@ -30,8 +30,8 @@ const int ramp_delta_p = 12;
 const int ramp_power_l = 80;
 const int ramp_power_r = 85;
 
-const int reverse_power_l = 22;
-const int reverse_power_r = 25;
+const int reverse_power_l = 36;
+const int reverse_power_r = 40;
 
 const int turn_power_l = 36;
 const int turn_power_r = 40;
@@ -42,10 +42,8 @@ const int up_t2 = 6800;
 const int up_t3 = 11500;
 const int up_t4 = 15000;
 
-const int down_t1 = 2000;
-const int down_t2 = 3000;
-const int down_t3 = 9000;
-const int down_t4 = 10500;
+/* Reverse Timings */
+const int reverse_watchdog = 3500;
 
 /* Turning Timings */
 const int turning_grace = 4000;
@@ -131,8 +129,7 @@ void next_junction(void) {
             
             /* 0 0 0 - Where's the line? */
             case 0:
-                cout << "No line detected" << endl;
-                stop(); 
+                cout << "No line detected" << endl; 
                 break;
             
             /* 0 0 1 - Moving Serverly Left */
@@ -281,8 +278,13 @@ void next_limit(void) {
 
 void back_up_from_limit(void) {
 
+    /* TODO: Reversing from D3 needs timer */
+
     /* Junction Detection Flag */
     bool junction_detected = false;
+    
+    /* Reversing Watchdog */
+    reversing_watch.start();
     
      while(!junction_detected) {
         
@@ -292,8 +294,8 @@ void back_up_from_limit(void) {
         /* DEBUG */
         cout << "b0 = " << ((robot.line & 0x01)) << " b1 = " << ((robot.line & 0x02) >> 1) << " b2 = " << ((robot.line & 0x04) >> 2) << "    J = " << ((robot.line & 0x08) >> 3);
         
-        /* Reverse until Junction */
-        if((robot.line & 0x07) == 0x07) {
+        /* Reverse until Junction or Watchdog */
+        if(((robot.line & 0x07) == 0x07) || (reversing_watch.read() > reverse_watchdog)) {
                       
             /* 1 1 1 - Detected */
             cout << "Detected" << endl;
@@ -307,6 +309,9 @@ void back_up_from_limit(void) {
             right_motor(reverse_power_r, REVERSE);             
 	    }           
     }
+    
+    /* Stop Watch */
+    reversing_watch.stop();
     
     /* Read Line Sensors */
     read_line_sensors();
@@ -325,7 +330,6 @@ void back_up_from_limit(void) {
             /* 0 0 0 - Where's the line? */
             case 0:
                 cout << "No line detected" << endl;
-                stop(); 
                 break;
             
             /* 0 0 1 - Moving Serverly Left */

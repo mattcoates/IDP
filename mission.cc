@@ -95,16 +95,20 @@ static state_t do_state_test() {
                 next_limit();
                 break;
                 
+            case 'y':
+                back_up_from_limit();
+                break;
+                
             case 'r':
                 traverse_ramp(UPWARDS);
                 break;
                 
             case 'f':
                 lift(UP);
-                delay(300);
+                break;
+                
+            case 'g':
                 lift(DOWN);
-                delay(3000);
-                stop();
                 break;
             
             case 'a':
@@ -140,8 +144,11 @@ static state_t do_state_test() {
                 cout << "n = Next Junction" << endl;
                 cout << "t = Turn Clockwise" << endl;
                 cout << "s = Turn Anticlockwise" << endl;
+                cout << "r = Traverse Ramp" << endl;
                 cout << "l = Next Limit" << endl;
-                cout << "f = Forklift Upwards for 2.5s" << endl;
+                cout << "y = Backup from Limit" << endl;
+                cout << "f = Forklift Up" << endl;
+                cout << "g = Forklift Down" << endl;
                 break;
         }
     }

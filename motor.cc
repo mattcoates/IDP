@@ -13,6 +13,7 @@
 
 using namespace std;
 
+stopwatch chain_watch;
 
 void motor_init(void){
     
@@ -59,14 +60,39 @@ void lift(int direction) {
     int output = 0;
     
     if(direction) {
+        
+        /* Lift Until Tape */
         output = LIFT_SPEED + 128;
+        
+        read_line_sensors();
+        chain_watch.start();
+        
+        while(((robot.line & 0x80) == 0x00) || (chain_watch.read() < 1000)) {
+        
+            rlink.command(MOTOR_3_GO, output);
+            read_line_sensors();        
+        }
+        
+        chain_watch.stop();
+        stop();
+        
     } else {
-        output = LIFT_SPEED;    
+        
+        /* Lift Until Tape */
+        output = LIFT_SPEED;
+        
+        read_line_sensors();
+        chain_watch.start();
+        
+        while(((robot.line & 0x80) == 0x00) || (chain_watch.read() < 1000)) {
+        
+            rlink.command(MOTOR_3_GO, output);
+            read_line_sensors();        
+        }
+        
+        chain_watch.stop();
+        stop();    
     }
-    
-    rlink.command(MOTOR_3_GO, output); 
-
-
 }
 
 
