@@ -96,7 +96,15 @@ static state_t do_state_test() {
                 break;
                 
             case 'y':
-                back_up_from_limit();
+                back_up_from_limit(D1);
+                break;
+                
+            case 'u':
+                back_up_from_limit(D3);
+                break;
+                
+            case 'i':
+                back_up_from_limit(2);
                 break;
                 
             case 'r':
@@ -146,7 +154,9 @@ static state_t do_state_test() {
                 cout << "s = Turn Anticlockwise" << endl;
                 cout << "r = Traverse Ramp" << endl;
                 cout << "l = Next Limit" << endl;
-                cout << "y = Backup from Limit" << endl;
+                cout << "y = Backup from Limit at D1 or D2" << endl;
+                cout << "u = Backup from Limit at D3" << endl;
+                cout << "i = Backup from Limit anywhere else" << endl;
                 cout << "f = Forklift Up" << endl;
                 cout << "g = Forklift Down" << endl;
                 break;

@@ -31,20 +31,6 @@ void travel(int current_location, int current_heading, int destination, int desi
         
             if(destination == P2) {
                 
-                back_up_from_limit();
-                robot.location = 1;
-                robot.heading = SOUTH;
-                
-                change_heading(SOUTH, WEST);
-                
-                next_junction();
-                robot.location = 3;
-                
-                change_heading(WEST, SOUTH);
-                
-                next_limit();
-                robot.location = P2;
-                
             }
             
             if(destination == C1) {

@@ -11,8 +11,9 @@
 #define HALT 0
 
 /* Motor Parameters */
-#define RAMP_RATE   64
-#define LIFT_SPEED  127
+#define RAMP_RATE       64
+#define LIFT_SPEED_UP   127
+#define LIFT_SPEED_DOWN 60
 
 /* Function Prototypes */
 void motor_init(void);

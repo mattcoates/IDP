@@ -61,8 +61,8 @@ void lift(int direction) {
     
     if(direction) {
         
-        /* Lift Until Tape */
-        output = LIFT_SPEED + 128;
+        /* Lift Up Until Tape */
+        output = LIFT_SPEED_UP + 128;
         
         read_line_sensors();
         chain_watch.start();
@@ -78,8 +78,8 @@ void lift(int direction) {
         
     } else {
         
-        /* Lift Until Tape */
-        output = LIFT_SPEED;
+        /* Lift Down Until Tape */
+        output = LIFT_SPEED_DOWN;
         
         read_line_sensors();
         chain_watch.start();

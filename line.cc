@@ -44,6 +44,8 @@ const int up_t4 = 15000;
 
 /* Reverse Timings */
 const int reverse_watchdog = 3500;
+const int reverse_grace = 1000;
+const int reverse_grace_d3 = 2500;
 
 /* Turning Timings */
 const int turning_grace = 4000;
@@ -276,9 +278,7 @@ void next_limit(void) {
 }
 
 
-void back_up_from_limit(void) {
-
-    /* TODO: Reversing from D3 needs timer */
+void back_up_from_limit(int location) {
 
     /* Junction Detection Flag */
     bool junction_detected = false;
@@ -286,7 +286,7 @@ void back_up_from_limit(void) {
     /* Reversing Watchdog */
     reversing_watch.start();
     
-     while(!junction_detected) {
+    while(!junction_detected) {
         
         /* Read Line Sensors */
         read_line_sensors();
@@ -294,20 +294,57 @@ void back_up_from_limit(void) {
         /* DEBUG */
         cout << "b0 = " << ((robot.line & 0x01)) << " b1 = " << ((robot.line & 0x02) >> 1) << " b2 = " << ((robot.line & 0x04) >> 2) << "    J = " << ((robot.line & 0x08) >> 3);
         
-        /* Reverse until Junction or Watchdog */
-        if(((robot.line & 0x07) == 0x07) || (reversing_watch.read() > reverse_watchdog)) {
-                      
-            /* 1 1 1 - Detected */
-            cout << "Detected" << endl;
-            stop();   
-            junction_detected = true;  
-                     
+        /* Location Based Cases */
+        if(location == D3) {
+                    
+            /* Reverse until Junction Detected (Ignoring First 2.5s) */
+            if(((robot.line & 0x07) == 0x07) && (reversing_watch.read() > reverse_grace_d3)) {
+                          
+                /* 1 1 1 - Detected */
+                cout << "Detected" << endl;
+                stop();   
+                junction_detected = true;  
+                         
+            } else {
+            
+                /* Reverse */
+                left_motor(reverse_power_l, REVERSE);
+                right_motor(reverse_power_r, REVERSE);             
+	        }
+	        
+        } else if ((location == D1) || (location == D2)) {
+            
+            /* Reverse until Junction Detected or Watchdog Triggers */
+            if(((robot.line & 0x07) == 0x07) || (reversing_watch.read() > reverse_watchdog)) {
+                          
+                /* 1 1 1 - Detected */
+                cout << "Detected" << endl;
+                stop();   
+                junction_detected = true;  
+                         
+            } else {
+            
+                /* Reverse */
+                left_motor(reverse_power_l, REVERSE);
+                right_motor(reverse_power_r, REVERSE);             
+	        }     
         } else {
         
-            /* Reverse */
-            left_motor(reverse_power_l, REVERSE);
-            right_motor(reverse_power_r, REVERSE);             
-	    }           
+            /* Reverse until Junction Detected (Ignoring First 1s) */
+            if(((robot.line & 0x07) == 0x07) && (reversing_watch.read() > reverse_grace)) {
+                          
+                /* 1 1 1 - Detected */
+                cout << "Detected" << endl;
+                stop();   
+                junction_detected = true;  
+                         
+            } else {
+            
+                /* Reverse */
+                left_motor(reverse_power_l, REVERSE);
+                right_motor(reverse_power_r, REVERSE);             
+	        }       
+        }          
     }
     
     /* Stop Watch */
