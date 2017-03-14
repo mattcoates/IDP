@@ -10,10 +10,10 @@
 #include "sensors.h"
 #include "navigation.h"
 #include "mission.h"
+#include "fork.h"
 
 using namespace std;
 
-stopwatch chain_watch;
 
 void motor_init(void){
     
@@ -52,47 +52,6 @@ void left_motor(int speed, int direction){
     
     /* DEBUG */
     cout << "  L =  " << speed << " (" << output << ")" ;
-}
-
-
-void lift(int direction) {
-
-    int output = 0;
-    
-    if(direction) {
-        
-        /* Lift Up Until Tape */
-        output = LIFT_SPEED_UP + 128;
-        
-        read_line_sensors();
-        chain_watch.start();
-        
-        while(((robot.line & 0x80) == 0x00) || (chain_watch.read() < 1000)) {
-        
-            rlink.command(MOTOR_3_GO, output);
-            read_line_sensors();        
-        }
-        
-        chain_watch.stop();
-        stop();
-        
-    } else {
-        
-        /* Lift Down Until Tape */
-        output = LIFT_SPEED_DOWN;
-        
-        read_line_sensors();
-        chain_watch.start();
-        
-        while(((robot.line & 0x80) == 0x00) || (chain_watch.read() < 1000)) {
-        
-            rlink.command(MOTOR_3_GO, output);
-            read_line_sensors();        
-        }
-        
-        chain_watch.stop();
-        stop();    
-    }
 }
 
 

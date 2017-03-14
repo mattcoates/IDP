@@ -10,6 +10,7 @@
 #include "sensors.h"
 #include "navigation.h"
 #include "mission.h"
+#include "fork.h"
 
 using namespace std;
 

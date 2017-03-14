@@ -1,7 +1,7 @@
 CC=g++
 CFLAGS=-Wall -ansi -g -I artifacts/1BRobot -c
 LDFLAGS=-L artifacts/1BRobot
-SOURCES=main.cc line.cc motor.cc sensors.cc navigation.cc mission.cc
+SOURCES=main.cc line.cc motor.cc sensors.cc navigation.cc mission.cc fork.cc
 OBJECTS=$(SOURCES:.cc=.o)
 EXECUTABLE=main
 
