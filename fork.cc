@@ -38,28 +38,30 @@ int pallet_detect(void) {
         delay(1000);
         
         /* Read and Decide - Attempt 1 */
-        int reading1 = rlink.request(ADC4);    
+        int reading1 = rlink.request(ADC4);
+        
+        cout << "Reading 1 = " << reading1 << endl; 
         
         
-        if((robot.pallet_colour > RED_LOW) && (robot.pallet_colour < RED_HIGH)) {
+        if((reading1 > RED_LOW) && (reading1 < RED_HIGH)) {
         
             reading1 = RED;
         
         } 
         
-        else if((robot.pallet_colour > GREEN_LOW) && (robot.pallet_colour < GREEN_HIGH)) {
+        else if((reading1 > GREEN_LOW) && (reading1 < GREEN_HIGH)) {
         
             reading1 = GREEN;
         
         }
         
-        else if((robot.pallet_colour > BLACK_LOW) && (robot.pallet_colour < BLACK_HIGH)) {
+        else if((reading1 > BLACK_LOW) && (reading1 < BLACK_HIGH)) {
         
             reading1 = BLACK;
         
         }
         
-        else if((robot.pallet_colour > WHITE_LOW) && (robot.pallet_colour < WHITE_HIGH)) {
+        else if((reading1 > WHITE_LOW) && (reading1 < WHITE_HIGH)) {
         
             reading1 = WHITE;
         
@@ -77,26 +79,28 @@ int pallet_detect(void) {
         /* Read and Decide - Attempt 2 */
         int reading2 = rlink.request(ADC4);    
         
+        cout << "Reading 2 = " << reading2 << endl;
         
-        if((robot.pallet_colour > RED_LOW) && (robot.pallet_colour < RED_HIGH)) {
+        
+        if((reading2 > RED_LOW) && (reading2 < RED_HIGH)) {
         
             reading2 = RED;
         
         } 
         
-        else if((robot.pallet_colour > GREEN_LOW) && (robot.pallet_colour < GREEN_HIGH)) {
+        else if((reading2 > GREEN_LOW) && (reading2 < GREEN_HIGH)) {
         
             reading2 = GREEN;
         
         }
         
-        else if((robot.pallet_colour > BLACK_LOW) && (robot.pallet_colour < BLACK_HIGH)) {
+        else if((reading2 > BLACK_LOW) && (reading2 < BLACK_HIGH)) {
         
             reading2 = BLACK;
         
         }
         
-        else if((robot.pallet_colour > WHITE_LOW) && (robot.pallet_colour < WHITE_HIGH)) {
+        else if((reading2 > WHITE_LOW) && (reading2 < WHITE_HIGH)) {
         
             reading2 = WHITE;
         
@@ -104,7 +108,7 @@ int pallet_detect(void) {
         
         else {
         
-            reading2 = 0;
+            reading2 = 5;
         
         }
         

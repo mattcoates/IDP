@@ -10,12 +10,12 @@
 #define LIFT_SPEED_DOWN 80
 
 /* LDR Thresholds */
-#define RED_LOW     36
+#define RED_LOW     33
 #define RED_HIGH    75
-#define GREEN_LOW   29
-#define GREEN_HIGH  36
+#define GREEN_LOW   27
+#define GREEN_HIGH  33
 #define BLACK_LOW   0 
-#define BLACK_HIGH  29
+#define BLACK_HIGH  27
 #define WHITE_LOW   75
 #define WHITE_HIGH  255
 

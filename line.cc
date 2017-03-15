@@ -22,8 +22,8 @@ stopwatch reversing_watch;
 const int base_power = 70;
 const int delta_p = 12;
 
-const int base_power_creep = 30;
-const int delta_p_creep = 5;
+const int base_power_creep = 35;
+const int delta_p_creep = 4;
 
 const int ramp_base_power = 80;
 const int ramp_delta_p = 13;
@@ -34,8 +34,8 @@ const int ramp_power_r = 85;
 const int reverse_power_l = 36;
 const int reverse_power_r = 40;
 
-const int turn_power_l = 36;
-const int turn_power_r = 40;
+const int turn_power_l = 45;
+const int turn_power_r = 50;
 
 /* Ramp Timings */
 const int up_t1 = 4000;
@@ -228,7 +228,6 @@ void next_limit(void) {
             /* 1 0 1 - What the actual */
             case 5:
                 cout << "I am a confused robot" << endl;
-                stop(); 
                 break;
 
             /* 1 1 0 - Moving Slightly Right */
@@ -410,7 +409,7 @@ void turn_90_anti_clockwise(void) {
     turning_watch.start();
 
     /* Turn until Junction Sensor goes White w/ Grace Period */
-    while((turning_watch.read() < turning_grace)||((robot.line & 0x01) == 0)) {
+    while((turning_watch.read() < turning_grace)||((robot.line & 0x03) == 0)) {
         read_line_sensors();
         left_motor(turn_power_l, REVERSE);
         right_motor(turn_power_r, FORWARD);
@@ -429,7 +428,7 @@ void turn_90_clockwise(void) {
     turning_watch.start();
 
     /* Turn until Junction Sensor goes White w/ Grace Period */
-    while((turning_watch.read() < turning_grace)||((robot.line & 0x02) == 0)) {
+    while((turning_watch.read() < turning_grace)||((robot.line & 0x01) == 0)) {
         read_line_sensors();
         left_motor(turn_power_l, FORWARD);
         right_motor(turn_power_r, REVERSE);
