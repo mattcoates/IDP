@@ -18,6 +18,7 @@ stopwatch chain_watch;
 
 /* Chain Timings */
 const int chain_grace = 800;
+const int chain_dog = 3500;
 
 
 /* Pallet Deetection */
@@ -137,7 +138,7 @@ void lift(int direction) {
         read_line_sensors();
         chain_watch.start();
         
-        while(((robot.line & 0x80) == 0x00) || (chain_watch.read() < chain_grace)) {
+        while((((robot.line & 0x80) == 0x00) || (chain_watch.read() < chain_grace)) && (chain_watch.read() < chain_dog)) {
         
             rlink.command(MOTOR_3_GO, output);
             read_line_sensors();        
@@ -154,7 +155,7 @@ void lift(int direction) {
         read_line_sensors();
         chain_watch.start();
         
-        while(((robot.line & 0x80) == 0x00) || (chain_watch.read() < chain_grace)) {
+        while((((robot.line & 0x80) == 0x00) || (chain_watch.read() < chain_grace)) && (chain_watch.read() < chain_dog)) {
         
             rlink.command(MOTOR_3_GO, output);
             read_line_sensors();        

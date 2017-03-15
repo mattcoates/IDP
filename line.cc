@@ -18,9 +18,11 @@ stopwatch turning_watch;
 stopwatch ramp_watch;
 stopwatch reversing_watch;
 
+stopwatch test_watch;
+
 /* Output Powers */
 const int base_power = 70;
-const int delta_p = 12;
+const int delta_p = 8;
 
 const int base_power_creep = 35;
 const int delta_p_creep = 4;
@@ -41,7 +43,7 @@ const int turn_power_r = 50;
 const int up_t1 = 4000;
 const int up_t2 = 6800;
 const int up_t3 = 11500;
-const int up_t4 = 15000;
+const int up_t4 = 13000;
 
 /* Reverse Timings */
 const int reverse_watchdog = 3500;
@@ -55,9 +57,13 @@ void next_junction(void) {
 
 	/* Junction Detection Flag */
 	bool junction_detected = false;
+	
+	test_watch.start();
 
 	/* Loop until Junction Detected */
 	while(!(junction_detected)) { 
+	
+	cout << test_watch.read() << endl;;
 
         /* Read Line Sensors */
         read_line_sensors();
@@ -114,6 +120,8 @@ void next_junction(void) {
               break;         
 	    }      
 	}
+	
+	test_watch.stop();
 	
     /* Read Line Sensors */
     read_line_sensors();
@@ -634,8 +642,7 @@ void traverse_ramp(int direction) {
        
                 /* 1 0 1 - What the actual */
                 case 5:
-                    cout << "I am a confused robot" << endl;
-                    stop(); 
+                    cout << "I am a confused robot" << endl; 
                     break;
 
                 /* 1 1 0 - Moving Slightly Right */
@@ -711,8 +718,9 @@ void traverse_ramp(int direction) {
        
                 /* 1 0 1 - What the actual */
                 case 5:
-                    cout << "I am a confused robot" << endl;
-                    stop(); 
+                    cout << "I am a confused robot" << endl; 
+                    left_motor(base_power_creep, FORWARD);
+                    right_motor(base_power_creep, FORWARD);
                     break;
 
                 /* 1 1 0 - Moving Slightly Right */

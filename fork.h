@@ -7,7 +7,7 @@
 
 /* Motor Parameters */
 #define LIFT_SPEED_UP   127
-#define LIFT_SPEED_DOWN 80
+#define LIFT_SPEED_DOWN 70
 
 /* LDR Thresholds */
 #define RED_LOW     33
