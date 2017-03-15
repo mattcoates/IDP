@@ -19,7 +19,7 @@ class robot_data {
         
         /* Payload Handling */
         bool carrying_pallet;     
-        int current_pallet_colour;
+        int pallet_colour;
 	    int forklift_position;
 };
 

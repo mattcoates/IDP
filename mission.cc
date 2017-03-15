@@ -115,6 +115,10 @@ static state_t do_state_test() {
             case 'g':
                 lift(DOWN);
                 break;
+                
+            case 'd':
+                cout << pallet_detect() << endl;
+                break;
             
             case 'a':
                 next_junction();
@@ -155,6 +159,7 @@ static state_t do_state_test() {
                 cout << "u = Backup from Limit anywhere else" << endl;
                 cout << "f = Forklift Up" << endl;
                 cout << "g = Forklift Down" << endl;
+                cout << "d = Detect Pallet Type [ 1-R 2-G 3-B 4-W ]" << endl;
                 break;
         }
     }
