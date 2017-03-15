@@ -29,7 +29,7 @@ int pallet_detect(void) {
     
     int pallet_colour = 0;
 
-    while(!(detected) || (attempts < 4)) {
+    while(!(detected) && (attempts < 4)) {
 
         /* Increment Attempts */
         attempts += 1;
