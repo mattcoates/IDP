@@ -62,14 +62,14 @@ void next_junction(void) {
 	bool junction_detected = false;
 	
 	/* DEBUG Watch */
-	//test_watch.start();
+	test_watch.start();
 	int time = 0;
 
 	/* Loop until Junction Detected */
 	while(!(junction_detected)) { 
 	
 	    /* DEBUG */
-	    //time = test_watch.read();
+	    time = test_watch.read();
 
         /* Read Line Sensors */
         read_line_sensors();
@@ -127,7 +127,7 @@ void next_junction(void) {
 	    }  
 	    
 	    /* DEBUG */
-	    //cout << (test_watch.read() - time) << endl;    
+	    cout << (test_watch.read() - time) << endl;    
 	}
 	
     /* Read Line Sensors */

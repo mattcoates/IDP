@@ -307,12 +307,15 @@ static state_t do_state_begin_deliver(void) {
             move_fork(robot.forklift_position, JUST_BELOW);
         
         }
+    } else {
+    
+        move_fork(robot.forklift_position, JUST_BELOW);
     }
     
     /* Update Delivery Record */
     robot.delivered = 1;
     
-    move_fork(robot.forklift_position, JUST_BELOW);
+    
     
     /* Move to C2 */
     travel(A, C2, EAST);
