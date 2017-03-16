@@ -22,13 +22,13 @@ stopwatch test_watch;
 
 /* Output Powers */
 const int base_power = 70;
-const int delta_p = 8;
+const int delta_p = 10;
 
 const int base_power_creep = 35;
-const int delta_p_creep = 4;
+const int delta_p_creep = 8;
 
 const int ramp_base_power = 80;
-const int ramp_delta_p = 13;
+const int ramp_delta_p = 14;
 
 const int ramp_power_l = 80;
 const int ramp_power_r = 85;
@@ -43,7 +43,7 @@ const int turn_power_r = 50;
 const int up_t1 = 4000;
 const int up_t2 = 6800;
 const int up_t3 = 11500;
-const int up_t4 = 13000;
+const int up_t4 = 15000;
 
 /* Reverse Timings */
 const int reverse_watchdog = 3500;
