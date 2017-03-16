@@ -46,8 +46,12 @@ state_t run_state(state_t cur_state) {
 /* 0. State Init - Setup Robot */
 static state_t do_state_init() {
 
-    /* Link Init */                      
-    if (!rlink.initialise(ROBOT_NUM)) {
+    /* Link Init */   
+    #ifdef __arm__
+   if (!rlink.initialise ("127.0.0.1")) {
+    #else
+   if (!rlink.initialise (ROBOT_NUM)) {
+    #endif                   
         cout << "Cannot initialise link" << endl;
         rlink.print_errs("    ");
     } 
