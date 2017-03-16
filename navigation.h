@@ -9,11 +9,13 @@
 #define D1      13
 #define D2      16
 #define D3      12
+#define A       10
+#define B       14
 
 #define START_BOX   6
 #define FINISH_BOX  10
 
 /* Function Prototypes */
-void travel(int current_location, int current_heading, int destination, int desired_heading);
+void travel(int current_location, int destination, int desired_heading);
 
 #endif

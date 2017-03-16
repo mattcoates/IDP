@@ -15,7 +15,7 @@
 using namespace std;
 
 typedef enum {
-    STATE_INIT = 0, STATE_TEST, STATE_END, NUM_STATES
+    STATE_INIT = 0, STATE_TEST, STATE_END, STATE_MISSION_LOAD, STATE_BEGIN_DELIVER, STATE_UNLOAD, NUM_STATES
 } state_t;
 
 typedef state_t state_func_t(void);
@@ -25,10 +25,13 @@ state_t run_state(state_t cur_state);
 static state_t do_state_init(void);
 static state_t do_state_test(void);
 static state_t do_state_end(void);
+static state_t do_state_mission_load(void);
+static state_t do_state_begin_deliver(void);
+static state_t do_state_unload(void);
 
 /* State Function Look Up Table */
 state_func_t* const state_table[NUM_STATES] = {
-    do_state_init, do_state_test, do_state_end
+    do_state_init, do_state_test, do_state_end, do_state_mission_load, do_state_begin_deliver, do_state_unload
 };
 
 /* Run State Function */
@@ -40,14 +43,13 @@ state_t run_state(state_t cur_state) {
 
 /** STATE FUNCTIONS **/
 
-/* 0. State Init */
+/* 0. State Init - Setup Robot */
 static state_t do_state_init() {
 
     /* Link Init */                      
     if (!rlink.initialise(ROBOT_NUM)) {
         cout << "Cannot initialise link" << endl;
         rlink.print_errs("    ");
-        /* TODO: Flush & Retry */
     } 
     
     /* Motor Init */
@@ -58,17 +60,40 @@ static state_t do_state_init() {
     robot.heading = EAST;
     
     /* Pallet Init */
-    robot.carrying_pallet = false;
+    robot.pallet_colour = 0;
+    robot.forklift_position = VERY_BOTTOM;
+    robot.stack_d2 = false;
+    clear_leds();
 
-    return STATE_TEST;
+    /* Select Mode */
+    cout << "Atlantis AGV Online" << endl << endl;
+    cout << "Select Mode:" << endl << "m = Commence Mission" << endl << "t = Enter Test Mode" << endl;
+        
+    char a;    
+    cin >> a;
+
+    if(a == 'm') {
+        
+        return STATE_MISSION_LOAD;    
+    }
+    else if (a == 't') {
+    
+        return STATE_TEST;
+    }
+    else {
+    
+        cout << "Invalid Selection!" << endl;
+        return STATE_END;
+        
+    }
 }
 
 
 
-/* 1. State Two */
+/* 1. State Two - Test Console */
 static state_t do_state_test() {
     
-     cout << "Team Challanger - Testing Console v1.0" << endl;
+     cout << endl << "Atlantis - Testing Console v2.0" << endl;
      cout << "[Press h for help]" << endl;
     
     while(true) {
@@ -117,39 +142,14 @@ static state_t do_state_test() {
                 break;
                 
             case 'd':
-                cout << pallet_detect() << endl;
-                break;
-            
-            case 'a':
-                next_junction();
-                next_junction();
-                turn_90_anti_clockwise();
-                next_junction();           
-                break;
+                signal_pallet_type(pallet_detect()); 
+                break; 
                 
-            case 'b':
-                next_junction();
-                next_junction();
-                next_junction();     
-                turn_90_clockwise();
-                next_limit();                      
-                break;
-                
-            case 'c':
-                next_junction();
-                traverse_ramp(UPWARDS);
-                turn_90_clockwise();
-                next_junction();
-                next_junction();
-                next_junction();
-                next_junction();
-                next_limit();                   
-                break;            
+            case 'q':
+                return STATE_END;
+                break;         
             
             case 'h':
-                cout << "a = Test 1 - Follow, Turn, Follow" << endl;
-                cout << "b = Test 2 - Follow, Align, Stop" << endl;
-                cout << "c = Test 3 - Follow, Ramp, Follow, Align, Stop" << endl << endl;
                 cout << "n = Next Junction" << endl;
                 cout << "t = Turn Clockwise" << endl;
                 cout << "s = Turn Anticlockwise" << endl;
@@ -160,18 +160,125 @@ static state_t do_state_test() {
                 cout << "f = Forklift Up" << endl;
                 cout << "g = Forklift Down" << endl;
                 cout << "d = Detect Pallet Type [ 1-R 2-G 3-B 4-W ]" << endl;
+                cout << "q = Quit Testing" << endl;
                 break;
         }
     }
-    
-    return STATE_END;
 }
 
 
 
-/* 2. State Three */
+/* 2. State Three - End */
 static state_t do_state_end() {
     stop();
+    return STATE_END;
+}
+
+/* 3. State Four - Begin Mission */
+static state_t do_state_mission_load() {
+
+    /* Init Forklift */
+    move_fork(robot.forklift_position, JUST_BELOW);
+    /* Move to P1 */
+    travel(robot.location, P1, SOUTH);
+    
+    /** PICK UP PALLET ONE **/
+    
+    /* Raise Forklift */
+    move_fork(robot.forklift_position, JUST_ABOVE);
+    /* Detect Pallet */
+    signal_pallet_type(pallet_detect());    
+    /* Move to C1 */
+    travel(robot.location, C1, EAST);
+    /* Lower Forklift */
+    move_fork(robot.forklift_position, JUST_BELOW);
+    
+    /** PICK UP PALLET TWO **/
+    
+    /* Signal New Load */
+    signal_new_load();  
+    /* Move to P1 */
+    travel(robot.location, P1, SOUTH);  
+    /* Raise Forklift */
+    move_fork(robot.forklift_position, JUST_ABOVE);
+    /* Detect Pallet */
+    signal_pallet_type(pallet_detect()); 
+    /* Move to C1 */
+    travel(robot.location, C1, EAST);
+    /* Lower Forklift */
+    move_fork(robot.forklift_position, JUST_BELOW);
+    
+    /** PICK UP PALLET THREE **/
+    
+    /* Signal New Load */
+    signal_new_load();  
+    /* Move to P1 */
+    travel(robot.location, P1, SOUTH);  
+    /* Raise Forklift */
+    move_fork(robot.forklift_position, JUST_ABOVE);
+    /* Detect Pallet */
+    signal_pallet_type(pallet_detect()); 
+    /* Move to C1 */
+    travel(robot.location, C1, EAST);
+    /* Lower Forklift */
+    move_fork(robot.forklift_position, JUST_BELOW);
+    
+    /** PICK UP PALLET FOUR **/
+    
+    /* Move to P2 */
+    travel(robot.location, P2, SOUTH);
+    /* Raise Forklift */
+    move_fork(robot.forklift_position, JUST_ABOVE);
+    /* Detect Pallet */
+    signal_pallet_type(pallet_detect());
+    
+    /* Move to Position A from P2 */
+    travel(robot.location, A, EAST);
+    
+    return STATE_BEGIN_DELIVER;
+
+}
+
+/* 4. State Five - Begin Delivery */
+static state_t do_state_begin_deliver(void) {
+
+    if(robot.pallet_colour == RED) {
+        
+        /* Deliver to D1 */
+        travel(robot.location, D1, NORTH);
+        move_fork(robot.forklift_position, JUST_BELOW);
+    
+    }
+    
+    else if((robot.pallet_colour == GREEN) || (robot.pallet_colour == WHITE)) {
+    
+        /* Deliver to D2 */
+        travel(robot.location, D2, SOUTH);
+        move_fork(robot.forklift_position, JUST_BELOW);
+        robot.stack_d2 = true;
+    
+    }
+    
+    else {
+    
+        /* Deliver to D3 */
+        travel(robot.location, D3, SOUTH);
+        move_fork(robot.forklift_position, VERY_BOTTOM);
+        travel(robot.location, A, EAST);
+        move_fork(robot.forklift_position, JUST_BELOW);
+    
+    }
+    
+    /* Move to C2 */
+    travel(robot.location, C2, EAST);
+    
+    return STATE_UNLOAD;
+    
+}
+
+/* 5. State Six - Unload Conveyor */
+static state_t do_state_unload(void) {
+
     return STATE_END;
 }
 

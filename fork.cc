@@ -30,7 +30,7 @@ int pallet_detect(void) {
     
     int pallet_colour = 0;
 
-    while(!(detected) && (attempts < 4)) {
+    while(!(detected) && (attempts < 6)) {
 
         /* Increment Attempts */
         attempts += 1;
@@ -121,7 +121,7 @@ int pallet_detect(void) {
             
         }
     }
-    
+    robot.pallet_colour = pallet_colour;
     return pallet_colour;
 }
 
@@ -163,6 +163,80 @@ void lift(int direction) {
         
         chain_watch.stop();
         stop();    
+    }
+}
+
+
+void move_fork(int current_pos, int des_pos) {
+
+    robot.forklift_position = des_pos;
+
+    switch (current_pos) {
+        
+        case VERY_BOTTOM:
+        
+            if(des_pos == JUST_BELOW) {
+                lift(UP);        
+            } 
+            else if(des_pos == JUST_ABOVE) {
+                lift(UP);
+                lift(UP);
+            }
+            else if(des_pos == STACKING){
+                lift(UP);
+                lift(UP);
+                lift(UP);
+            }
+            
+        break;
+        
+        case JUST_BELOW:
+        
+            if(des_pos == VERY_BOTTOM) {
+                lift(DOWN);        
+            } 
+            else if(des_pos == JUST_ABOVE) {
+                lift(UP);
+            }
+            else if(des_pos == STACKING){
+                lift(UP);
+                lift(UP);
+            }
+        
+        break;
+
+        case JUST_ABOVE:
+        
+            if(des_pos == VERY_BOTTOM) {
+                lift(DOWN);
+                lift(DOWN);     
+            } 
+            else if(des_pos == JUST_BELOW) {
+                lift(DOWN);
+            }
+            else if(des_pos == STACKING){
+                lift(UP);
+            }
+        
+        break;
+    
+        case STACKING:
+        
+            if(des_pos == VERY_BOTTOM) {
+                lift(DOWN);
+                lift(DOWN); 
+                lift(DOWN);    
+            } 
+            else if(des_pos == JUST_BELOW) {
+                lift(DOWN);
+                lift(DOWN);
+            }
+            else if(des_pos == JUST_ABOVE){
+                lift(DOWN);
+            }
+        
+        break;    
+    
     }
 }
 

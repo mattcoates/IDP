@@ -18,13 +18,14 @@ stopwatch turning_watch;
 stopwatch ramp_watch;
 stopwatch reversing_watch;
 
-stopwatch test_watch;
 
 /* Output Powers */
 const int base_power = 70;
 const int delta_p = 10;
 
 const int base_power_creep = 35;
+const int base_power_creep_r = 40;
+const int base_power_creep_l = 36;
 const int delta_p_creep = 8;
 
 const int ramp_base_power = 80;
@@ -57,60 +58,56 @@ void next_junction(void) {
 
 	/* Junction Detection Flag */
 	bool junction_detected = false;
-	
-	test_watch.start();
 
 	/* Loop until Junction Detected */
 	while(!(junction_detected)) { 
-	
-	cout << test_watch.read() << endl;;
 
         /* Read Line Sensors */
         read_line_sensors();
         
         /* DEBUG */
-        cout << "L = " << ((robot.line & 0x04) >> 2) << " C = " << ((robot.line & 0x02) >> 1) << " R = " << (robot.line & 0x01) << "    J = " << ((robot.line & 0x08) >> 3);
+        //cout << "L = " << ((robot.line & 0x04) >> 2) << " C = " << ((robot.line & 0x02) >> 1) << " R = " << (robot.line & 0x01) << "    J = " << ((robot.line & 0x08) >> 3);
         
         switch((robot.line & 0x07)) {
             
             /* 0 0 0 - Where's the line? */
             case 0:
-                cout << "No line detected" << endl;
+                //cout << "No line detected" << endl;
                 break;
             
             /* 0 0 1 - Moving Serverly Left */
             case 1:
                 left_motor((base_power + (2*delta_p)), FORWARD);
                 right_motor((base_power - (2*delta_p)), FORWARD);
-                cout << "Serverely Left" << endl;
+                //cout << "Serverely Left" << endl;
                 break;
         
             /* 0 1 0 - Following the Line */
             case 2:
                 left_motor(base_power, FORWARD);
                 right_motor(base_power, FORWARD);
-                cout << "All Good" << endl; 
+                //cout << "All Good" << endl; 
                 break;
                 
             /* 0 1 1 - Moving Slightly Left */
             case 3:
                 left_motor((base_power + delta_p), FORWARD);
                 right_motor((base_power - delta_p), FORWARD);
-                cout << "Slightly Left" << endl;  
+                //cout << "Slightly Left" << endl;  
                 break;
                 
             /* 1 0 0 - Moving Serverly Right */
             case 4:
                 left_motor((base_power - (2*delta_p)), FORWARD);
                 right_motor((base_power + (2*delta_p)), FORWARD); 
-                cout << "Serverely Right" << endl; 
+                //cout << "Serverely Right" << endl; 
                 break;
 
             /* 1 1 0 - Moving Slightly Right */
             case 6:
                 left_motor((base_power - delta_p), FORWARD);
                 right_motor((base_power + delta_p), FORWARD); 
-                cout << "Slightly Right" << endl; 
+                //cout << "Slightly Right" << endl; 
                 break;
                 
             /* 1 1 1 - Junction Detected */
@@ -120,8 +117,6 @@ void next_junction(void) {
               break;         
 	    }      
 	}
-	
-	test_watch.stop();
 	
     /* Read Line Sensors */
     read_line_sensors();
@@ -133,52 +128,52 @@ void next_junction(void) {
     while((robot.line & 0x08) == 0) {
         
         /* DEBUG */
-        cout << "L = " << ((robot.line & 0x04) >> 2) << " C = " << ((robot.line & 0x02) >> 1) << " R = " << (robot.line & 0x01) << "    J = " << ((robot.line & 0x08) >> 3);
+        //cout << "L = " << ((robot.line & 0x04) >> 2) << " C = " << ((robot.line & 0x02) >> 1) << " R = " << (robot.line & 0x01) << "    J = " << ((robot.line & 0x08) >> 3);
         
         switch((robot.line & 0x07)) {
             
             /* 0 0 0 - Where's the line? */
             case 0:
-                cout << "No line detected" << endl; 
+                //cout << "No line detected" << endl; 
                 break;
             
             /* 0 0 1 - Moving Serverly Left */
             case 1:
                 left_motor((base_power_creep + (2*delta_p_creep)), FORWARD);
                 right_motor((base_power_creep - (2*delta_p_creep)), FORWARD);
-                cout << "Serverely Left" << endl;
+                //cout << "Serverely Left" << endl;
                 break;
         
             /* 0 1 0 - Following the Line */
             case 2:
                 left_motor(base_power_creep, FORWARD);
                 right_motor(base_power_creep, FORWARD);
-                cout << "All Good" << endl; 
+                //cout << "All Good" << endl; 
                 break;
                 
             /* 0 1 1 - Moving Slightly Left */
             case 3:
                 left_motor((base_power_creep + delta_p_creep), FORWARD);
                 right_motor((base_power_creep - delta_p_creep), FORWARD);
-                cout << "Slightly Left" << endl;  
+                //cout << "Slightly Left" << endl;  
                 break;
                 
             /* 1 0 0 - Moving Serverly Right */
             case 4:
                 left_motor((base_power_creep - (2*delta_p_creep)), FORWARD);
                 right_motor((base_power_creep + (2*delta_p_creep)), FORWARD); 
-                cout << "Serverely Right" << endl; 
+                //cout << "Serverely Right" << endl; 
                 break;
 
             /* 1 1 0 - Moving Slightly Right */
             case 6:
                 left_motor((base_power_creep - delta_p_creep), FORWARD);
                 right_motor((base_power_creep + delta_p_creep), FORWARD); 
-                cout << "Slightly Right" << endl; 
+                //cout << "Slightly Right" << endl; 
                 break;
             /* 1 1 1 - Continue */
             case 7:
-                cout << "Continuing" << endl;
+                //cout << "Continuing" << endl;
                 left_motor(base_power_creep, FORWARD);
                 right_motor(base_power_creep, FORWARD);                 
                 break;         
@@ -206,31 +201,31 @@ void next_limit(void) {
             
             /* 0 0 0 - Where's the line? */
             case 0:
-                cout << "No line detected" << endl; 
+                //cout << "No line detected" << endl; 
                 break;
             
             /* 0 0 1 - Moving Serverly Left */
             case 1:
-                left_motor((base_power_creep + (2*delta_p_creep)), FORWARD);
-                right_motor((base_power_creep - (2*delta_p_creep)), FORWARD); 
+                left_motor((base_power_creep_l + (2*delta_p_creep)), FORWARD);
+                right_motor((base_power_creep_r - (2*delta_p_creep)), FORWARD); 
                 break;
         
             /* 0 1 0 - Following the Line */
             case 2:
-                left_motor(base_power_creep, FORWARD);
-                right_motor(base_power_creep, FORWARD); 
+                left_motor(base_power_creep_l, FORWARD);
+                right_motor(base_power_creep_r, FORWARD); 
                 break;
                 
             /* 0 1 1 - Moving Slightly Left */
             case 3:
-                left_motor((base_power_creep + delta_p_creep), FORWARD);
-                right_motor((base_power_creep - delta_p_creep), FORWARD); 
+                left_motor((base_power_creep_l + delta_p_creep), FORWARD);
+                right_motor((base_power_creep_r - delta_p_creep), FORWARD); 
                 break;
                 
             /* 1 0 0 - Moving Serverly Right */
             case 4:
-                left_motor((base_power_creep - (2*delta_p_creep)), FORWARD);
-                right_motor((base_power_creep + (2*delta_p_creep)), FORWARD); 
+                left_motor((base_power_creep_l - (2*delta_p_creep)), FORWARD);
+                right_motor((base_power_creep_r + (2*delta_p_creep)), FORWARD); 
                 break;
    
             /* 1 0 1 - What the actual */
@@ -240,8 +235,8 @@ void next_limit(void) {
 
             /* 1 1 0 - Moving Slightly Right */
             case 6:
-                left_motor((base_power_creep - delta_p_creep), FORWARD);
-                right_motor((base_power_creep + delta_p_creep), FORWARD); 
+                left_motor((base_power_creep_l - delta_p_creep), FORWARD);
+                right_motor((base_power_creep_r + delta_p_creep), FORWARD); 
                 break;
                 
             /* 1 1 1 - Somthing has gone wrong */
@@ -267,14 +262,14 @@ void next_limit(void) {
 	    if ((robot.limit & 0x40) == 0x00) {
 	    
 	        /* Turn Just One Wheel */
-	        left_motor(60, FORWARD);
+	        left_motor(50, FORWARD);
             right_motor(0, FORWARD);
 	    
 	    } else {
 	    
 	        /* Turn Other Wheel */
 	        left_motor(0, FORWARD);
-            right_motor(60, FORWARD);
+            right_motor(50, FORWARD);
 	 
 	    }
 	    
@@ -299,7 +294,7 @@ void back_up_from_limit(int location) {
         read_line_sensors();
         
         /* DEBUG */
-        cout << "b0 = " << ((robot.line & 0x01)) << " b1 = " << ((robot.line & 0x02) >> 1) << " b2 = " << ((robot.line & 0x04) >> 2) << "    J = " << ((robot.line & 0x08) >> 3);
+        //cout << "b0 = " << ((robot.line & 0x01)) << " b1 = " << ((robot.line & 0x02) >> 1) << " b2 = " << ((robot.line & 0x04) >> 2) << "    J = " << ((robot.line & 0x08) >> 3);
         
         /* Location Based Cases */
         if ((location == D1) || (location == D2)) {
@@ -351,7 +346,7 @@ void back_up_from_limit(int location) {
     while((robot.line & 0x08) == 0) {
         
         /* DEBUG */
-        cout << "L = " << ((robot.line & 0x04) >> 2) << " C = " << ((robot.line & 0x02) >> 1) << " R = " << (robot.line & 0x01) << "    J = " << ((robot.line & 0x08) >> 3);
+        //cout << "L = " << ((robot.line & 0x04) >> 2) << " C = " << ((robot.line & 0x02) >> 1) << " R = " << (robot.line & 0x01) << "    J = " << ((robot.line & 0x08) >> 3);
         
         switch((robot.line & 0x07)) {
             
@@ -371,28 +366,28 @@ void back_up_from_limit(int location) {
             case 2:
                 left_motor(base_power_creep, FORWARD);
                 right_motor(base_power_creep, FORWARD);
-                cout << "All Good" << endl; 
+                //cout << "All Good" << endl; 
                 break;
                 
             /* 0 1 1 - Moving Slightly Left */
             case 3:
                 left_motor((base_power_creep + delta_p_creep), FORWARD);
                 right_motor((base_power_creep - delta_p_creep), FORWARD);
-                cout << "Slightly Left" << endl;  
+                //cout << "Slightly Left" << endl;  
                 break;
                 
             /* 1 0 0 - Moving Serverly Right */
             case 4:
                 left_motor((base_power_creep - (2*delta_p_creep)), FORWARD);
                 right_motor((base_power_creep + (2*delta_p_creep)), FORWARD); 
-                cout << "Serverely Right" << endl; 
+                //cout << "Serverely Right" << endl; 
                 break;
 
             /* 1 1 0 - Moving Slightly Right */
             case 6:
                 left_motor((base_power_creep - delta_p_creep), FORWARD);
                 right_motor((base_power_creep + delta_p_creep), FORWARD); 
-                cout << "Slightly Right" << endl; 
+                //cout << "Slightly Right" << endl; 
                 break;
             /* 1 1 1 - Continue */
             case 7:
@@ -548,35 +543,35 @@ void traverse_ramp(int direction) {
                 case 1:
                     left_motor((base_power + (2*delta_p)), FORWARD);
                     right_motor((base_power - (2*delta_p)), FORWARD);
-                    cout << "Serverely Left" << endl;
+                    //cout << "Serverely Left" << endl;
                     break;
             
                 /* 0 1 0 - Following the Line */
                 case 2:
                     left_motor(base_power, FORWARD);
                     right_motor(base_power, FORWARD);
-                    cout << "All Good" << endl; 
+                    //cout << "All Good" << endl; 
                     break;
                     
                 /* 0 1 1 - Moving Slightly Left */
                 case 3:
                     left_motor((base_power + delta_p), FORWARD);
                     right_motor((base_power - delta_p), FORWARD);
-                    cout << "Slightly Left" << endl;  
+                    //cout << "Slightly Left" << endl;  
                     break;
                     
                 /* 1 0 0 - Moving Serverly Right */
                 case 4:
                     left_motor((base_power - (2*delta_p)), FORWARD);
                     right_motor((base_power + (2*delta_p)), FORWARD); 
-                    cout << "Serverely Right" << endl; 
+                    //cout << "Serverely Right" << endl; 
                     break;
 
                 /* 1 1 0 - Moving Slightly Right */
                 case 6:
                     left_motor((base_power - delta_p), FORWARD);
                     right_motor((base_power + delta_p), FORWARD); 
-                    cout << "Slightly Right" << endl; 
+                    //cout << "Slightly Right" << endl; 
                     break;
                     
                 /* 1 1 1 - Junction Detected */
@@ -609,40 +604,40 @@ void traverse_ramp(int direction) {
                 
                 /* 0 0 0 - Where's the line? */
                 case 0:
-                    cout << "No line detected" << endl;
+                    //cout << "No line detected" << endl;
                     break;
                 
                 /* 0 0 1 - Moving Serverly Left */
                 case 1:
                     left_motor((ramp_base_power + (2*ramp_delta_p)), FORWARD);
                     right_motor((ramp_base_power - (2*ramp_delta_p)), FORWARD);
-                    cout << "Serverely Left" << endl;
+                    //cout << "Serverely Left" << endl;
                     break;
             
                 /* 0 1 0 - Following the Line */
                 case 2:
                     left_motor(ramp_base_power, FORWARD);
                     right_motor(ramp_base_power, FORWARD);
-                    cout << "All Good" << endl; 
+                    //cout << "All Good" << endl; 
                     break;
                     
                 /* 0 1 1 - Moving Slightly Left */
                 case 3:
                     left_motor((ramp_base_power + ramp_delta_p), FORWARD);
                     right_motor((ramp_base_power - ramp_delta_p), FORWARD);
-                    cout << "Slightly Left" << endl;  
+                    //cout << "Slightly Left" << endl;  
                     break;
                     
                 /* 1 0 0 - Moving Serverly Right */
                 case 4:
                     left_motor((ramp_base_power - (2*ramp_delta_p)), FORWARD);
                     right_motor((ramp_base_power + (2*ramp_delta_p)), FORWARD); 
-                    cout << "Serverely Right" << endl; 
+                    //cout << "Serverely Right" << endl; 
                     break;
        
                 /* 1 0 1 - What the actual */
                 case 5:
-                    cout << "I am a confused robot" << endl; 
+                    //cout << "I am a confused robot" << endl; 
                     break;
 
                 /* 1 1 0 - Moving Slightly Right */
@@ -692,33 +687,33 @@ void traverse_ramp(int direction) {
                 case 1:
                     left_motor((base_power_creep + (2*delta_p_creep)), FORWARD);
                     right_motor((base_power_creep - (2*delta_p_creep)), FORWARD);
-                    cout << "Serverely Left" << endl;
+                    //cout << "Serverely Left" << endl;
                     break;
             
                 /* 0 1 0 - Following the Line */
                 case 2:
                     left_motor(base_power_creep, FORWARD);
                     right_motor(base_power_creep, FORWARD);
-                    cout << "All Good" << endl; 
+                    //cout << "All Good" << endl; 
                     break;
                     
                 /* 0 1 1 - Moving Slightly Left */
                 case 3:
                     left_motor((base_power_creep + delta_p_creep), FORWARD);
                     right_motor((base_power_creep - delta_p_creep), FORWARD);
-                    cout << "Slightly Left" << endl;  
+                    //cout << "Slightly Left" << endl;  
                     break;
                     
                 /* 1 0 0 - Moving Serverly Right */
                 case 4:
                     left_motor((base_power_creep - (2*delta_p_creep)), FORWARD);
                     right_motor((base_power_creep + (2*delta_p_creep)), FORWARD); 
-                    cout << "Serverely Right" << endl; 
+                    //cout << "Serverely Right" << endl; 
                     break;
        
                 /* 1 0 1 - What the actual */
                 case 5:
-                    cout << "I am a confused robot" << endl; 
+                    //cout << "I am a confused robot" << endl; 
                     left_motor(base_power_creep, FORWARD);
                     right_motor(base_power_creep, FORWARD);
                     break;
@@ -727,7 +722,7 @@ void traverse_ramp(int direction) {
                 case 6:
                     left_motor((base_power_creep - delta_p_creep), FORWARD);
                     right_motor((base_power_creep + delta_p_creep), FORWARD); 
-                    cout << "Slightly Right" << endl; 
+                    //cout << "Slightly Right" << endl; 
                     break;        
 	        }      
         

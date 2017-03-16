@@ -17,10 +17,10 @@ class robot_data {
         /* Limit Switches */
         int limit;
         
-        /* Payload Handling */
-        bool carrying_pallet;     
+        /* Payload Handling */    
         int pallet_colour;
 	    int forklift_position;
+	    bool stack_d2;
 };
 
 /* Global Robot Link */

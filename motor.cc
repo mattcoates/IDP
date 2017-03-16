@@ -34,7 +34,7 @@ void right_motor(int speed, int direction){
     rlink.command(MOTOR_2_GO, output);
     
     /* DEBUG */
-    cout << "  R =  " << speed << " (" << output << ")" << endl;
+    //cout << "  R =  " << speed << " (" << output << ")" << endl;
 }
 
 
@@ -51,7 +51,7 @@ void left_motor(int speed, int direction){
     rlink.command(MOTOR_1_GO, output); 
     
     /* DEBUG */
-    cout << "  L =  " << speed << " (" << output << ")" ;
+    //cout << "  L =  " << speed << " (" << output << ")" ;
 }
 
 
