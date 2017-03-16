@@ -46,14 +46,14 @@ const int turn_power_r = 100;
 const int up_t1 = 3500;
 const int up_t2 = 6000;
 const int up_t3 = 9200;
-const int up_t4 = 13000;
+const int up_t4 = 11500;
 
 /* Reverse Timings */
 const int reverse_watchdog = 3500;
 const int reverse_grace = 2500;
 
 /* Turning Timings */
-const int turning_grace = 1000;
+const int turning_grace = 1500;
 
 
 void next_junction(void) {
@@ -424,7 +424,7 @@ void turn_90_anti_clockwise(void) {
     turning_watch.start();
 
     /* Turn until Junction Sensor goes White w/ Grace Period */
-    while((turning_watch.read() < turning_grace)||((robot.line & 0x03) == 0)) {
+    while((turning_watch.read() < turning_grace) or ((robot.line & 0x03) == 0)) {
         read_line_sensors();
         left_motor(turn_power_l, REVERSE);
         right_motor(turn_power_r, FORWARD);
@@ -432,6 +432,9 @@ void turn_90_anti_clockwise(void) {
     
     stop();
     turning_watch.stop();
+    
+    robot.left = 30;
+    robot.right = 30;
 }
 
 
@@ -451,6 +454,9 @@ void turn_90_clockwise(void) {
     
     stop();
     turning_watch.stop();
+    
+    robot.left = 30;
+    robot.right = 30;
 }
 
 
@@ -462,13 +468,16 @@ void change_heading(int old_heading, int new_heading) {
     /* NORTH */
     if(old_heading == NORTH) {
         if(new_heading == EAST) {
+            cout << "N to E" << endl;
             turn_90_clockwise();
         }
         else if(new_heading == SOUTH) {
+            cout << "N to S" << endl;
             turn_90_anti_clockwise();
             turn_90_anti_clockwise();
                 }
         else if(new_heading == WEST) {
+            cout << "N to W" << endl;
             turn_90_anti_clockwise();
         }
         else {
@@ -479,13 +488,16 @@ void change_heading(int old_heading, int new_heading) {
     /* WEST */
     if(old_heading == WEST) {
         if(new_heading == NORTH) {
+            cout << "W to N" << endl;
             turn_90_clockwise();
         }
         else if(new_heading == EAST) {
+            cout << "W to E" << endl;
             turn_90_anti_clockwise();
             turn_90_anti_clockwise();
                 }
         else if(new_heading == SOUTH) {
+            cout << "W to S" << endl;
             turn_90_anti_clockwise();
         }
         else {
@@ -496,13 +508,16 @@ void change_heading(int old_heading, int new_heading) {
     /* SOUTH */
     if(old_heading == SOUTH) {
         if(new_heading == WEST) {
+            cout << "S to W" << endl;
             turn_90_clockwise();
         }
         else if(new_heading == NORTH) {
+            cout << "S to N" << endl;
             turn_90_anti_clockwise();
             turn_90_anti_clockwise();
                 }
         else if(new_heading == EAST) {
+            cout << "S to E" << endl;
             turn_90_anti_clockwise();
         }
         else {
@@ -513,13 +528,16 @@ void change_heading(int old_heading, int new_heading) {
     /* EAST */
     if(old_heading == EAST) {
         if(new_heading == SOUTH) {
+        cout << "E to S" << endl;
             turn_90_clockwise();
         }
         else if(new_heading == WEST) {
+            cout << "E to W" << endl;
             turn_90_anti_clockwise();
             turn_90_anti_clockwise();
-                }
+        }
         else if(new_heading == NORTH) {
+            cout << "E to N" << endl;
             turn_90_anti_clockwise();
         }
         else {

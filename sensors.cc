@@ -49,7 +49,8 @@ void signal_pallet_type(int colour) {
         rlink.command(WRITE_PORT_2, 0xFE);
     }
     else {
-        rlink.command(WRITE_PORT_2, 0xF0);
+        rlink.command(WRITE_PORT_2, 0xFE);
+        robot.pallet_colour = BLACK;
     }
 }
 

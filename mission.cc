@@ -94,6 +94,7 @@ static state_t do_state_init() {
             return STATE_MISSION_LOAD;    
         } else if(b == 'b') {
             robot.reset = true;
+            robot.forklift_position = VERY_BOTTOM;
             return STATE_RAMP;
         }
        else {    
@@ -249,7 +250,7 @@ static state_t do_state_mission_load() {
     /** PICK UP PALLET FOUR **/
     
     /* Move to P2 */
-    travel(robot.location, P2, SOUTH);
+    travel(C1, P2, SOUTH);
     /* Raise Forklift */
     move_fork(robot.forklift_position, JUST_ABOVE);
     /* Detect Pallet */
@@ -275,7 +276,9 @@ static state_t do_state_ramp(void) {
 /* 4. State Five - Begin Delivery */
 static state_t do_state_begin_deliver(void) {
 
-    if(!(robot.reset)) {
+    if(robot.reset == false) {
+    
+        move_fork(robot.forklift_position, JUST_ABOVE);
         
         if(robot.pallet_colour == RED) {
             
@@ -309,8 +312,10 @@ static state_t do_state_begin_deliver(void) {
     /* Update Delivery Record */
     robot.delivered = 1;
     
+    move_fork(robot.forklift_position, JUST_BELOW);
+    
     /* Move to C2 */
-    travel(robot.location, C2, EAST);
+    travel(A, C2, EAST);
     
     return STATE_UNLOAD;
     
