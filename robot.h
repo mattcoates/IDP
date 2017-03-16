@@ -27,6 +27,8 @@ class robot_data {
 	    /* Motor Speed */
 	    int right;
 	    int left;
+	    
+	    bool reset;
 };
 
 /* Global Robot Link */

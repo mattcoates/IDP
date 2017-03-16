@@ -22,16 +22,16 @@ stopwatch test_watch;
 
 
 /* Output Powers */
-const int base_power = 70;
-const int delta_p = 10;
+const int base_power = 95;
+const int delta_p = 18;
 
 const int base_power_creep = 35;
 const int base_power_creep_r = 40;
 const int base_power_creep_l = 36;
 const int delta_p_creep = 8;
 
-const int ramp_base_power = 80;
-const int ramp_delta_p = 14;
+const int ramp_base_power = 98;
+const int ramp_delta_p = 20;
 
 const int ramp_power_l = 80;
 const int ramp_power_r = 85;
@@ -39,21 +39,21 @@ const int ramp_power_r = 85;
 const int reverse_power_l = 36;
 const int reverse_power_r = 40;
 
-const int turn_power_l = 45;
-const int turn_power_r = 50;
+const int turn_power_l = 95;
+const int turn_power_r = 100;
 
 /* Ramp Timings */
-const int up_t1 = 4000;
-const int up_t2 = 6800;
-const int up_t3 = 11500;
-const int up_t4 = 15000;
+const int up_t1 = 3500;
+const int up_t2 = 6000;
+const int up_t3 = 9200;
+const int up_t4 = 13000;
 
 /* Reverse Timings */
 const int reverse_watchdog = 3500;
 const int reverse_grace = 2500;
 
 /* Turning Timings */
-const int turning_grace = 4000;
+const int turning_grace = 1000;
 
 
 void next_junction(void) {
@@ -329,7 +329,7 @@ void back_up_from_limit(int location) {
         } else {
                         
             /* Reverse until Junction Detected (Ignoring First 2.5s) */
-            if(((robot.line & 0x07) == 0x07) && (reversing_watch.read() > reverse_grace)) {
+            if(((robot.line & 0x07) == 0x07) and (reversing_watch.read() > reverse_grace)) {
                           
                 /* 1 1 1 - Detected */
                 cout << "Detected" << endl;

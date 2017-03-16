@@ -25,6 +25,10 @@ void right_motor(int speed, int direction){
 
     int output = 0;
     
+    if(speed > 127) {
+        speed = 127;    
+    }
+    
     /* Generate Output */
     if(direction) {
         output = (0x7F & speed);
@@ -47,6 +51,10 @@ void right_motor(int speed, int direction){
 void left_motor(int speed, int direction){
 
     int output = 0;
+    
+   if(speed > 127) {
+        speed = 127;    
+    }
     
     /* Generate Output */
     if(direction) {

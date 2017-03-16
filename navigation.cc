@@ -37,7 +37,7 @@ void travel(int current_location, int destination, int desired_heading) {
         /* Starting from P2 */   
         case P2:
         
-            if(destination == A) {
+            if(destination == START_BOX) {
                 
                 /* Pull Away from Truck */
                 back_up_from_limit(robot.location);
@@ -47,23 +47,9 @@ void travel(int current_location, int destination, int desired_heading) {
                 next_junction();
                 next_junction();
                 change_heading(robot.heading, NORTH);
-                next_junction();
-                move_fork(robot.forklift_position, VERY_BOTTOM);
-                
-                /* Go Up Ramp */
-                traverse_ramp(UPWARDS);
-                move_fork(robot.forklift_position, JUST_ABOVE);
-                
-                /* Pull upto A */
-                change_heading(robot.heading, EAST);
-                next_junction();
-                next_junction();
-                
-                /* Change to Desired Heading */
-                change_heading(robot.heading, desired_heading);
                 
                 /* Update Location */
-                robot.location = A;             
+                robot.location = START_BOX;             
             }   
         
             break;
@@ -182,6 +168,7 @@ void travel(int current_location, int destination, int desired_heading) {
             
                 /* Move to D3 */
                 back_up_from_limit(robot.location);
+                change_heading(robot.heading, EAST);
                 change_heading(robot.heading, WEST);
                 next_junction();
                 next_junction();
@@ -204,6 +191,7 @@ void travel(int current_location, int destination, int desired_heading) {
                 /* Move to C2 */
                 back_up_from_limit(robot.location);
                 change_heading(robot.heading, EAST);
+                move_fork(robot.forklift_position, JUST_BELOW);
                 next_limit();
                 
                 /* Update Location */
@@ -233,6 +221,7 @@ void travel(int current_location, int destination, int desired_heading) {
                 /* Move to C2 */
                 back_up_from_limit(robot.location);
                 change_heading(robot.heading, EAST);
+                move_fork(robot.forklift_position, JUST_BELOW);
                 next_limit();
                 
                 /* Update Location */
@@ -266,6 +255,17 @@ void travel(int current_location, int destination, int desired_heading) {
                 
                 /* Update Location */
                 robot.location = A;             
+            }
+            
+            if(destination == FINISH_BOX) {
+            
+                /* Move to A */
+                back_up_from_limit(robot.location);
+                back_up_from_limit(robot.location);
+                change_heading(robot.heading, desired_heading);                
+                
+                /* Update Location */
+                robot.location = FINISH_BOX;             
             }
             
             if(destination == C2) {
@@ -302,8 +302,28 @@ void travel(int current_location, int destination, int desired_heading) {
                 
                 /* Update Location */
                 robot.location = P1;             
-            }       
-             
+            }      
+            
+            if(destination == A){
+                
+                /* Approach Ramp */
+                change_heading(robot.heading, NORTH);
+                next_junction();
+                move_fork(robot.forklift_position, VERY_BOTTOM);
+                
+                /* Go Up Ramp */
+                traverse_ramp(UPWARDS);
+                move_fork(robot.forklift_position, JUST_ABOVE);
+                
+                /* Pull upto A */
+                change_heading(robot.heading, EAST);
+                next_junction();
+                next_junction();
+                
+                /* Change to Desired Heading */
+                change_heading(robot.heading, desired_heading); 
+            }
+            
             break;    
     }
 

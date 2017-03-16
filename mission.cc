@@ -15,7 +15,7 @@
 using namespace std;
 
 typedef enum {
-    STATE_INIT = 0, STATE_TEST, STATE_END, STATE_MISSION_LOAD, STATE_BEGIN_DELIVER, STATE_UNLOAD, STATE_HOME, NUM_STATES
+    STATE_INIT = 0, STATE_TEST, STATE_END, STATE_MISSION_LOAD, STATE_BEGIN_DELIVER, STATE_UNLOAD, STATE_HOME, STATE_RAMP, NUM_STATES
 } state_t;
 
 typedef state_t state_func_t(void);
@@ -29,10 +29,11 @@ static state_t do_state_mission_load(void);
 static state_t do_state_begin_deliver(void);
 static state_t do_state_unload(void);
 static state_t do_state_home(void);
+static state_t do_state_ramp(void);
 
 /* State Function Look Up Table */
 state_func_t* const state_table[NUM_STATES] = {
-    do_state_init, do_state_test, do_state_end, do_state_mission_load, do_state_begin_deliver, do_state_unload, do_state_home
+    do_state_init, do_state_test, do_state_end, do_state_mission_load, do_state_begin_deliver, do_state_unload, do_state_home, do_state_ramp
 };
 
 /* Run State Function */
@@ -71,6 +72,7 @@ static state_t do_state_init() {
 	robot.delivered_d1 = 0;
 	robot.delivered = 0;
     clear_leds();
+    robot.reset = false;
 
     /* Select Mode */
     cout << "Atlantis AGV Online" << endl << endl;
@@ -81,17 +83,30 @@ static state_t do_state_init() {
 
     if(a == 'm') {
         
-        return STATE_MISSION_LOAD;    
+        cout << "Select Checkpoint:" << endl;
+        cout << "a - [Start] - Startbox facing East with forks at Bottom" << endl;
+        cout << "b - [Pre-Ramp] - Startbox facing East with forks at Bottom" << endl;
+        
+        char b;    
+        cin >> b;
+        
+        if(b == 'a') {
+            return STATE_MISSION_LOAD;    
+        } else if(b == 'b') {
+            robot.reset = true;
+            return STATE_RAMP;
+        }
+       else {    
+            cout << "Invalid Selection!" << endl;
+            return STATE_END;
+        }
     }
     else if (a == 't') {
-    
         return STATE_TEST;
     }
-    else {
-    
+    else {    
         cout << "Invalid Selection!" << endl;
-        return STATE_END;
-        
+        return STATE_END;       
     }
 }
 
@@ -240,42 +255,55 @@ static state_t do_state_mission_load() {
     /* Detect Pallet */
     signal_pallet_type(pallet_detect());
     
-    /* Move to Position A from P2 */
+    /* Move to START BOX from P2 */
+    travel(robot.location, START_BOX, NORTH);
+    
+    return STATE_RAMP;
+
+}
+
+/* 7. State Eight - Ramp Mode! */
+static state_t do_state_ramp(void) {
+    
+    /* Go Up Ramp */
     travel(robot.location, A, EAST);
     
     return STATE_BEGIN_DELIVER;
-
+    
 }
 
 /* 4. State Five - Begin Delivery */
 static state_t do_state_begin_deliver(void) {
 
-    if(robot.pallet_colour == RED) {
+    if(!(robot.reset)) {
         
-        /* Deliver to D1 */
-        travel(robot.location, D1, NORTH);
-        move_fork(robot.forklift_position, JUST_BELOW);
-        robot.delivered_d1 = 1;
-    
-    }
-    
-    else if((robot.pallet_colour == GREEN) || (robot.pallet_colour == WHITE)) {
-    
-        /* Deliver to D2 */
-        travel(robot.location, D2, SOUTH);
-        move_fork(robot.forklift_position, JUST_BELOW);
-        robot.delivered_d2 = 1;
-    
-    }
-    
-    else {
-    
-        /* Deliver to D3 */
-        travel(robot.location, D3, SOUTH);
-        move_fork(robot.forklift_position, VERY_BOTTOM);
-        travel(robot.location, A, EAST);
-        move_fork(robot.forklift_position, JUST_BELOW);
-    
+        if(robot.pallet_colour == RED) {
+            
+            /* Deliver to D1 */
+            travel(robot.location, D1, NORTH);
+            move_fork(robot.forklift_position, JUST_BELOW);
+            robot.delivered_d1 = 1;
+        
+        }
+        
+        else if((robot.pallet_colour == GREEN) || (robot.pallet_colour == WHITE)) {
+        
+            /* Deliver to D2 */
+            travel(robot.location, D2, SOUTH);
+            move_fork(robot.forklift_position, JUST_BELOW);
+            robot.delivered_d2 = 1;
+        
+        }
+        
+        else {
+        
+            /* Deliver to D3 */
+            travel(robot.location, D3, SOUTH);
+            move_fork(robot.forklift_position, VERY_BOTTOM);
+            travel(robot.location, A, EAST);
+            move_fork(robot.forklift_position, JUST_BELOW);
+        
+        }
     }
     
     /* Update Delivery Record */
@@ -341,9 +369,11 @@ static state_t do_state_unload(void) {
         /* Update Delivery Record */
         robot.delivered += 1;
         
-        /* Move to C2 */
-        travel(robot.location, C2, EAST); 
-            
+        if(robot.delivered != 4) {
+        
+            /* Move to C2 */
+            travel(robot.location, C2, EAST); 
+        }
     }
     
     return STATE_HOME;
