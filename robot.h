@@ -20,7 +20,9 @@ class robot_data {
         /* Payload Handling */    
         int pallet_colour;
 	    int forklift_position;
-	    bool stack_d2;
+	    int delivered_d2;
+	    int delivered_d1;
+	    int delivered;
 };
 
 /* Global Robot Link */

@@ -16,15 +16,6 @@ using namespace std;
 
 void travel(int current_location, int destination, int desired_heading) {
 
-   /* 
-    * TODO: Go Places, Do Things ect... 
-    *  - next_junction(void);
-    *  - next_limit(void);
-    *  - back_up_from_limit(void);
-    *  - change_heading(int old_heading, int new_heading); 
-    */
-
-
     switch(current_location) {
     
         /* Starting from P1 */
@@ -42,7 +33,6 @@ void travel(int current_location, int destination, int desired_heading) {
             }   
         
             break;
-            
         
         /* Starting from P2 */   
         case P2:
@@ -147,11 +137,61 @@ void travel(int current_location, int destination, int desired_heading) {
                 /* Update Location */
                 robot.location = D3;             
             } 
+            
+            if(destination == C2) {
+            
+                /* Move to C2 */
+                change_heading(robot.heading, EAST);
+                next_junction();
+                next_junction();
+                next_limit();
+                
+                /* Update Location */
+                robot.location = C2;
+            
+            }
               
             break;
         
         /* Starting from C2 */  
         case C2:
+        
+            if(destination == D1) {
+            
+                /* Move to D1 */
+                back_up_from_limit(robot.location);
+                change_heading(robot.heading, NORTH);
+                next_limit();           
+                
+                /* Update Location */
+                robot.location = D1;             
+            } 
+            
+            if(destination == D2) {
+            
+                /* Move to D2 */
+                back_up_from_limit(robot.location);
+                change_heading(robot.heading, SOUTH);
+                next_limit();                
+                
+                /* Update Location */
+                robot.location = D2;             
+            } 
+            
+            if(destination == D3) {
+            
+                /* Move to D3 */
+                back_up_from_limit(robot.location);
+                change_heading(robot.heading, WEST);
+                next_junction();
+                next_junction();
+                change_heading(robot.heading, SOUTH);
+                next_junction();
+                next_limit();
+                
+                /* Update Location */
+                robot.location = D3;             
+            } 
         
             break; 
                
@@ -169,6 +209,18 @@ void travel(int current_location, int destination, int desired_heading) {
                 /* Update Location */
                 robot.location = C2;
             }
+            
+            if(destination == FINISH_BOX) {
+                
+                /* Move to FINISH */
+                back_up_from_limit(robot.location);
+                change_heading(robot.heading, WEST);
+                next_junction();
+                next_junction();
+                
+                /* Update Location */
+                robot.location = FINISH_BOX;
+            }
         
             break; 
               
@@ -185,6 +237,18 @@ void travel(int current_location, int destination, int desired_heading) {
                 
                 /* Update Location */
                 robot.location = C2;
+            }
+            
+            if(destination == FINISH_BOX) {
+                
+                /* Move to FINISH */
+                back_up_from_limit(robot.location);
+                change_heading(robot.heading, WEST);
+                next_junction();
+                next_junction();
+                
+                /* Update Location */
+                robot.location = FINISH_BOX;
             }
         
             break;  
@@ -242,7 +306,6 @@ void travel(int current_location, int destination, int desired_heading) {
              
             break;    
     }
-
 
 }
 

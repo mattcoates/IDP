@@ -15,7 +15,7 @@
 using namespace std;
 
 typedef enum {
-    STATE_INIT = 0, STATE_TEST, STATE_END, STATE_MISSION_LOAD, STATE_BEGIN_DELIVER, STATE_UNLOAD, NUM_STATES
+    STATE_INIT = 0, STATE_TEST, STATE_END, STATE_MISSION_LOAD, STATE_BEGIN_DELIVER, STATE_UNLOAD, STATE_HOME, NUM_STATES
 } state_t;
 
 typedef state_t state_func_t(void);
@@ -28,10 +28,11 @@ static state_t do_state_end(void);
 static state_t do_state_mission_load(void);
 static state_t do_state_begin_deliver(void);
 static state_t do_state_unload(void);
+static state_t do_state_home(void);
 
 /* State Function Look Up Table */
 state_func_t* const state_table[NUM_STATES] = {
-    do_state_init, do_state_test, do_state_end, do_state_mission_load, do_state_begin_deliver, do_state_unload
+    do_state_init, do_state_test, do_state_end, do_state_mission_load, do_state_begin_deliver, do_state_unload, do_state_home
 };
 
 /* Run State Function */
@@ -66,7 +67,9 @@ static state_t do_state_init() {
     /* Pallet Init */
     robot.pallet_colour = 0;
     robot.forklift_position = VERY_BOTTOM;
-    robot.stack_d2 = false;
+    robot.delivered_d2 = 0;
+	robot.delivered_d1 = 0;
+	robot.delivered = 0;
     clear_leds();
 
     /* Select Mode */
@@ -175,6 +178,7 @@ static state_t do_state_test() {
 /* 2. State Three - End */
 static state_t do_state_end() {
     stop();
+    cout << "Task Complete!" << endl;
     return STATE_END;
 }
 
@@ -251,6 +255,7 @@ static state_t do_state_begin_deliver(void) {
         /* Deliver to D1 */
         travel(robot.location, D1, NORTH);
         move_fork(robot.forklift_position, JUST_BELOW);
+        robot.delivered_d1 = 1;
     
     }
     
@@ -259,7 +264,7 @@ static state_t do_state_begin_deliver(void) {
         /* Deliver to D2 */
         travel(robot.location, D2, SOUTH);
         move_fork(robot.forklift_position, JUST_BELOW);
-        robot.stack_d2 = true;
+        robot.delivered_d2 = 1;
     
     }
     
@@ -273,6 +278,9 @@ static state_t do_state_begin_deliver(void) {
     
     }
     
+    /* Update Delivery Record */
+    robot.delivered = 1;
+    
     /* Move to C2 */
     travel(robot.location, C2, EAST);
     
@@ -283,11 +291,77 @@ static state_t do_state_begin_deliver(void) {
 /* 5. State Six - Unload Conveyor */
 static state_t do_state_unload(void) {
 
+    while(robot.delivered < 4) {
+    
+        /* Lift Forklift */
+        move_fork(robot.forklift_position, STACKING);
+        
+        /* Detect Pallet */
+        signal_pallet_type(pallet_detect());
+        
+        /* Deliver to Correct Location */
+        if(robot.pallet_colour == RED) {
+        
+            /* Deliver D1 */
+            travel(robot.location, D1, NORTH);
+            
+            /* Lower Fork */
+            if(robot.delivered_d1 == 0) {
+                move_fork(robot.forklift_position, JUST_BELOW);
+                robot.delivered_d1 += 1;
+            } else if(robot.delivered_d1 == 1) {
+                move_fork(robot.forklift_position, JUST_ABOVE);
+            }
+        
+        } 
+        else if((robot.pallet_colour == GREEN) || (robot.pallet_colour == WHITE)) {
+        
+            /* Deliver D2 */
+            travel(robot.location, D2, SOUTH);
+            
+            /* Lower Fork */
+            if(robot.delivered_d2 == 0) {
+                move_fork(robot.forklift_position, JUST_BELOW);
+                robot.delivered_d2 += 1;
+            } else if(robot.delivered_d2 == 1) {
+                move_fork(robot.forklift_position, JUST_ABOVE);
+            }
+        
+        }
+        else {
+        
+            /* Deliver D3 */
+            travel(robot.location, D3, SOUTH);
+            move_fork(robot.forklift_position, VERY_BOTTOM);
+            travel(robot.location, A, EAST);
+            move_fork(robot.forklift_position, JUST_BELOW);   
+        }
+        
+        
+        /* Update Delivery Record */
+        robot.delivered += 1;
+        
+        /* Move to C2 */
+        travel(robot.location, C2, EAST); 
+            
+    }
+    
+    return STATE_HOME;
+    
+}
+
+
+/* 6. State Seven - Go Home */
+static state_t do_state_home(void) {
+
+    /* Head to Finish Box */
+    travel(robot.location, FINISH_BOX, WEST); 
+    
     return STATE_END;
 }
 
-/** END STATE FUNCTIONS **/
 
+/** END STATE FUNCTIONS **/
 
 
 /* State Machine Controller */
