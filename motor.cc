@@ -25,13 +25,19 @@ void right_motor(int speed, int direction){
 
     int output = 0;
     
+    /* Generate Output */
     if(direction) {
         output = (0x7F & speed);
     } else {
         output = (0x7F & speed) + 128;    
     }
     
-    rlink.command(MOTOR_2_GO, output);
+    /* Minimise Traffic */
+    if (output != robot.right) {
+        
+        rlink.command(MOTOR_2_GO, output);
+        robot.right = output;
+    }
     
     /* DEBUG */
     //cout << "  R =  " << speed << " (" << output << ")" << endl;
@@ -42,13 +48,19 @@ void left_motor(int speed, int direction){
 
     int output = 0;
     
+    /* Generate Output */
     if(direction) {
         output = (0x7F & speed) + 128;
     } else {
         output = (0x7F & speed);    
     }
     
-    rlink.command(MOTOR_1_GO, output); 
+    /* Minimise Traffic */
+    if (output != robot.left) {
+        
+        rlink.command(MOTOR_1_GO, output);
+        robot.left = output;
+    } 
     
     /* DEBUG */
     //cout << "  L =  " << speed << " (" << output << ")" ;

@@ -18,6 +18,8 @@ stopwatch turning_watch;
 stopwatch ramp_watch;
 stopwatch reversing_watch;
 
+stopwatch test_watch;
+
 
 /* Output Powers */
 const int base_power = 70;
@@ -58,9 +60,16 @@ void next_junction(void) {
 
 	/* Junction Detection Flag */
 	bool junction_detected = false;
+	
+	/* DEBUG Watch */
+	test_watch.start();
+	int time = 0;
 
 	/* Loop until Junction Detected */
 	while(!(junction_detected)) { 
+	
+	    /* DEBUG */
+	    time = test_watch.read();
 
         /* Read Line Sensors */
         read_line_sensors();
@@ -115,7 +124,10 @@ void next_junction(void) {
               stop();
               junction_detected = true;
               break;         
-	    }      
+	    }  
+	    
+	    /* DEBUG */
+	    cout << (test_watch.read() - time) << endl;    
 	}
 	
     /* Read Line Sensors */

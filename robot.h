@@ -23,6 +23,10 @@ class robot_data {
 	    int delivered_d2;
 	    int delivered_d1;
 	    int delivered;
+	    
+	    /* Motor Speed */
+	    int right;
+	    int left;
 };
 
 /* Global Robot Link */
