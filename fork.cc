@@ -176,13 +176,22 @@ void move_fork(int current_pos, int des_pos) {
         case VERY_BOTTOM:
         
             if(des_pos == JUST_BELOW) {
+            
+                cout << "Lift VB to JB" << endl;
+                
                 lift(UP);        
             } 
             else if(des_pos == JUST_ABOVE) {
+            
+                cout << "Lift VB to JA" << endl;
+            
                 lift(UP);
                 lift(UP);
             }
             else if(des_pos == STACKING){
+            
+                cout << "Lift VB to S" << endl;
+            
                 lift(UP);
                 lift(UP);
                 lift(UP);
@@ -193,12 +202,21 @@ void move_fork(int current_pos, int des_pos) {
         case JUST_BELOW:
         
             if(des_pos == VERY_BOTTOM) {
+            
+                cout << "Lift JB to VB" << endl;
+            
                 lift(DOWN);        
             } 
             else if(des_pos == JUST_ABOVE) {
+            
+                cout << "Lift JB to JA" << endl;
+            
                 lift(UP);
             }
             else if(des_pos == STACKING){
+            
+                cout << "Lift JB to S" << endl;
+            
                 lift(UP);
                 lift(UP);
             }
@@ -208,13 +226,22 @@ void move_fork(int current_pos, int des_pos) {
         case JUST_ABOVE:
         
             if(des_pos == VERY_BOTTOM) {
+            
+                cout << "Lift JA to VB" << endl;
+            
                 lift(DOWN);
                 lift(DOWN);     
             } 
             else if(des_pos == JUST_BELOW) {
+            
+                cout << "Lift JA to JB" << endl;
+            
                 lift(DOWN);
             }
             else if(des_pos == STACKING){
+            
+                cout << "Lift JA to S" << endl;
+            
                 lift(UP);
             }
         
@@ -223,15 +250,24 @@ void move_fork(int current_pos, int des_pos) {
         case STACKING:
         
             if(des_pos == VERY_BOTTOM) {
+            
+                cout << "Lift S to VB" << endl;
+            
                 lift(DOWN);
                 lift(DOWN); 
                 lift(DOWN);    
             } 
             else if(des_pos == JUST_BELOW) {
+            
+            cout << "Lift S to JB" << endl;
+            
                 lift(DOWN);
                 lift(DOWN);
             }
             else if(des_pos == JUST_ABOVE){
+            
+            cout << "Lift S to JA" << endl;
+            
                 lift(DOWN);
             }
         
