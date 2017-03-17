@@ -316,7 +316,7 @@ static state_t do_state_begin_deliver(void) {
     robot.delivered = 1;    
     
     /* Move to C2 */
-    travel(A, C2, EAST);
+    travel(robot.location, C2, EAST);
     
     return STATE_UNLOAD;
     
